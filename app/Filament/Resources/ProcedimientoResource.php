@@ -23,19 +23,48 @@ class ProcedimientoResource extends Resource
     {
         return $form
             ->schema([
-                //
-            ]);
+             
+                Forms\Components\TextInput::make('codigo')
+                    ->required()
+                    ->maxLength(50)
+                    ->label('Código del Procedimiento'),
+                        Forms\Components\TextInput::make('nombre')
+                    ->required()
+                    ->maxLength(255)
+                    ->label('Nombre del Procedimiento'),
+            
+            ])->columns(2);
+              
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                //
+
+                Tables\Columns\TextColumn::make('codigo')
+                    ->label('Código')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('nombre')
+                    ->label('Nombre del Procedimiento')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->label('Fecha de Creación'),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->label('Fecha de Actualización'),
             ])
+            ->defaultPaginationPageOption(20)
+            ->paginationPageOptions([10, 50, 100, 200])
             ->filters([
-                //
+                //filtro por codigo
+              
+                             
             ])
+            
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

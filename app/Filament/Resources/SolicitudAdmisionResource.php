@@ -12,10 +12,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\Solicitud_Admision;
 
 class SolicitudAdmisionResource extends Resource
 {
-    protected static ?string $model = SolicitudAdmision::class;
+    protected static ?string $model = Solicitud_Admision::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
