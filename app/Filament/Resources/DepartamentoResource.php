@@ -23,15 +23,29 @@ class DepartamentoResource extends Resource
     {
         return $form
             ->schema([
-                //
-            ]);
+           
+                Forms\Components\TextInput::make('nombre')
+                    ->required()
+                    ->maxLength(255)
+                    ->label('Nombre del Departamento'),
+            ])->columns(2);
+        
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('nombre')
+                    ->label('Nombre del Departamento')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->label('Fecha de Creación'),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->label('Fecha de Actualización'),
             ])
             ->filters([
                 //

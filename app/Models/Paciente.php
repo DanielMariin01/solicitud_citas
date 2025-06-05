@@ -17,8 +17,9 @@ class Paciente extends Model
         'tipo_identificacion',
         'numero_identificacion',
         'fk_ciudad',
-        'fk_procedimiento',
+        'procedimiento',
         'correo',
+
        
     ];
 
@@ -29,8 +30,5 @@ class Paciente extends Model
     }
 
     // Relación con Procedimiento
-    public function procedimiento()
-    {
-        return $this->belongsTo(Procedimiento::class, 'fk_procedimiento', 'id_procedimiento');
-    }
+  
 }

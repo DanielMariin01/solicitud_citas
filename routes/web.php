@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FormularioCitaController;
 use Illuminate\Support\Facades\Route;
 
 use App\Livewire\Formulario;
@@ -11,7 +12,9 @@ Route::get('/', function () {
 });
 
 
-//Route::get('/solicitar-cita', function () {
-    //return view('livewire.formulario');
-//});
-  
+Route::get('/solicitar-cita', function () {
+    return view('solicitar-cita.formulario');
+});
+
+Route::get('/solicitar-cita', [FormularioCitaController::class, 'mostrarFormulario']);
+

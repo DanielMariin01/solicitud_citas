@@ -18,6 +18,7 @@ class Ciudad extends Model
 
         
     ];
+    
 
     // Relación con pacientes
     public function pacientes()

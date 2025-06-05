@@ -15,10 +15,6 @@ class Procedimiento extends Model
       
     ];
     // Relación con Paciente
-    public function pacientes()
-    {
-        return $this->hasMany(Paciente::class, 'fk_procedimiento', 'id_procedimiento'); 
-    }
-    
+   
 
 }
