@@ -19,6 +19,12 @@ class Paciente extends Model
         'fk_ciudad',
         'procedimiento',
         'correo',
+        'celular',
+        'fk_eps',
+        
+        
+        
+
 
        
     ];

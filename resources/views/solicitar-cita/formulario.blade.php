@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+ 
   <title>Formulario de Cita</title>
   <style>
     * {
@@ -27,7 +28,7 @@ background: linear-gradient(270deg,rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227,
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      max-width: 550px;
+      max-width: 620px;
       width: 100%;
     }
 
@@ -102,7 +103,36 @@ background: linear-gradient(270deg,rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227,
     .btn-submit:hover {
       background-color: #00788a;
     }
+.upload-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease;
+  }
 
+  .upload-area:hover {
+    background-color: #e9ecef;
+  }
+
+  .upload-area input[type="file"] {
+    display: none;
+  }
+
+  .custom-file-label {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #003f53;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .custom-file-label:hover {
+    background-color: #00566d;
+  }
     /* Responsive para pantallas mayores a 768px */
     @media (min-width: 768px) {
       .form-group.half {
@@ -185,6 +215,32 @@ background: linear-gradient(270deg,rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227,
     @enderror
 </div>
 
+
+
+  <div class="form-group half">
+    <label for="" class="form-label">Celular</label>
+    <input 
+        type="text" 
+        name="celular" 
+        id="celular" 
+        placeholder="Ingrese su numero de celular"
+        class="form-control @error('celular') is-invalid @else @if(old('celular')) is-valid @endif @enderror" 
+        value="{{ old('celular') }}" 
+        required
+    >
+    @error('celular')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @else
+        @if(old('celular'))
+            <div class="valid-feedback"></div>
+        @endif
+    @enderror
+</div>
+
+
+
+
+
       <div class="form-group half">
     <label for="correo" class="form-label">Correo</label>
     <input 
@@ -229,7 +285,39 @@ background: linear-gradient(270deg,rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227,
     @enderror
 </div>
  
-      
+
+
+<div class="form-group half">
+    <label for="id_eps" class="form-label">Seleccione su EPS</label>
+    <select 
+        name="id_eps" 
+        id="id_eps" 
+        class="form-select @error('id_eps') is-invalid @else @if(old('id_eps')) is-valid @endif @enderror" 
+        required
+    >
+        <option value="">-- Seleccione --</option>
+        @foreach($eps as $eps)
+            <option value="{{ $eps->id_eps}}" {{ old('id_eps') == $ciudad->id_ciudad ? 'selected' : '' }}>
+                {{ $eps->nombre }}
+            </option>
+        @endforeach
+    </select>
+    @error('id_eps')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @else
+        @if(old('id_eps'))
+            <div class="valid-feedback">¡Se ve bien!</div>
+        @endif
+    @enderror
+</div>
+
+
+
+
+
+
+
+
 
 
 <div class="form-group">
@@ -256,8 +344,85 @@ background: linear-gradient(270deg,rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227,
 
 
 
+<div class="form-group full">
+  <label class="form-label">Historia Clínica</label>
 
+  <div class="upload-area" id="upload-area">
+    <p><strong>Suba aquí la historia clínica</strong></p>
+    <p>Arrastra y suelta archivos aquí</p>
+    
+    <label for="archivo" class="custom-file-label">Seleccionar archivos</label>
+    <input 
+      type="file" 
+      name="archivo[]" 
+      id="archivo" 
+      multiple 
+      required
+      accept=".pdf,.jpg"
+      class="@error('archivo') is-invalid @else @if(old('archivo')) is-valid @endif @enderror"
+    >
 
+    @error('archivo')
+      <div class="invalid-feedback d-block">{{ $message }}</div>
+    @else
+      @if(old('archivo'))
+        <div class="valid-feedback d-block">¡Archivo cargado correctamente!</div>
+      @endif
+    @enderror
+  </div>
+</div>
+
+<div class="form-group full">
+  <label class="form-label">Autorización</label>
+
+  <div class="upload-area" id="upload-area">
+    <p><strong>Suba aquí la autorización</strong></p>
+    <p>Arrastra y suelta archivos aquí</p>
+    
+    <label for="archivo" class="custom-file-label">Seleccionar archivos</label>
+    <input 
+      type="file" 
+      name="archivo[]" 
+      id="archivo" 
+      multiple 
+      class="@error('archivo') is-invalid @else @if(old('archivo')) is-valid @endif @enderror"
+    >
+
+    @error('archivo')
+      <div class="invalid-feedback d-block">{{ $message }}</div>
+    @else
+      @if(old('archivo'))
+        <div class="valid-feedback d-block">¡Archivo cargado correctamente!</div>
+      @endif
+    @enderror
+  </div>
+</div>
+
+<div class="form-group full">
+  <label class="form-label">Orden Médica</label>
+
+  <div class="upload-area" id="upload-area">
+    <p><strong>Suba aquí la orden médica</strong></p>
+    <p>Arrastra y suelta archivos aquí</p>
+    
+    <label for="archivo" class="custom-file-label">Seleccionar archivos</label>
+    <input 
+      type="file" 
+      name="archivo[]" 
+      id="archivo" 
+      multiple 
+      class="@error('archivo') is-invalid @else @if(old('archivo')) is-valid @endif @enderror"
+    >
+
+    @error('archivo')
+      <div class="invalid-feedback d-block">{{ $message }}</div>
+    @else
+      @if(old('archivo'))
+        <div class="valid-feedback d-block">¡Archivo cargado correctamente!</div>
+      @endif
+    @enderror
+  </div>
+</div>
 
 
       <div class="form-group">
@@ -268,10 +433,11 @@ background: linear-gradient(270deg,rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227,
         <div class="error">Debes aceptar antes de continuar.</div>
       </div>
 
-      <button type="submit" class="btn-submit">Agendar Cita</button>
+      <button type="submit" class="btn-submit">Solicitar Cita</button>
     </form>
   </div>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  
 </body>
 </html>
