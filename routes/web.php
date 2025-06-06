@@ -18,3 +18,4 @@ Route::get('/solicitar-cita', function () {
 
 Route::get('/solicitar-cita', [FormularioCitaController::class, 'mostrarFormulario']);
 
+

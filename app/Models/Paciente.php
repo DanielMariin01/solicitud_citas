@@ -9,6 +9,8 @@ use App\Models\Procedimiento;
 class Paciente extends Model
 
 {
+    // Indicar la tabla asociada al modelo
+    protected $table = 'paciente';
     //declarar llave primaria
     protected $primaryKey = 'id_paciente';
     protected $fillable = [
@@ -16,17 +18,17 @@ class Paciente extends Model
         'apellido',
         'tipo_identificacion',
         'numero_identificacion',
+        'correo',
         'fk_ciudad',
         'procedimiento',
-        'correo',
-        'celular',
         'fk_eps',
-        
-        
-        
-
-
-       
+        'celular',
+        'historia_clinica',
+        'autorizacion',
+        'orden-medica',
+        'estado',
+        'observacion',
+          
     ];
 
     // Relación con Ciudad

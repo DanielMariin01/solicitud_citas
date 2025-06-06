@@ -180,7 +180,7 @@ select {
 <body>
   <div class="form-container">
     <h2>Solicitar Cita</h2>
-    <form>
+    <form >
    <div class="form-group half">
     <label for="nombre" class="form-label">Nombre</label>
     <input 
