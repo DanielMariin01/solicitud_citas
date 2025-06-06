@@ -10,99 +10,100 @@
     * {
       box-sizing: border-box;
     }
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(270deg, rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227, 1) 53%, rgba(83, 150, 237, 1) 100%);
+  margin: 0;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
 
-    body {
-      font-family: Arial, sans-serif;
-background: #5396ED;
-background: linear-gradient(270deg,rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227, 1) 53%, rgba(83, 150, 237, 1) 100%);
-      margin: 0;
-      padding: 40px 20px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-    }
+.form-container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  max-width: 620px;
+  width: 100%;
+}
 
-    .form-container {
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      max-width: 620px;
-      width: 100%;
-    }
+h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  text-align: center;
+}
 
-    h2 {
-      margin-bottom: 20px;
-      font-size: 22px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 10px;
-      text-align: center;
-    }
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
 
-    form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-    }
+.form-group.half {
+  width: 100%; /* Por defecto para móviles */
+}
 
-    .form-group.half {
-      width: 100%;
-    }
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
 
-    label {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
 
-    input[type="text"],
-    input[type="email"],
-    input[type="number"],
-    select {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-    }
+.error {
+  color: red;
+  font-size: 0.85em;
+  margin-top: 5px;
+}
 
-    .error {
-      color: red;
-      font-size: 0.85em;
-      margin-top: 5px;
-    }
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
 
-    .form-check {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
+.form-check label {
+  font-weight: normal;
+}
 
-    .form-check label {
-      font-weight: normal;
-    }
+.btn-submit {
+  background-color: #004e5f;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  width: 100%;
+}
 
-    .btn-submit {
-      background-color: #004e5f;
-      color: #fff;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
-      width: 100%;
-    }
+.btn-submit:hover {
+  background-color: #00788a;
+}
 
-    .btn-submit:hover {
-      background-color: #00788a;
-    }
+/* --- SECCIÓN CRÍTICA: ESTILOS PARA LA SUBIDA DE ARCHIVOS --- */
+
 .upload-area {
     border: 2px dashed #ccc;
     padding: 20px;
@@ -110,35 +111,70 @@ background: linear-gradient(270deg,rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227,
     text-align: center;
     background-color: #f8f9fa;
     transition: background-color 0.3s ease;
-  }
+    /* --- ¡IMPORTANTE! PARA POSICIONAR EL INPUT INTERNO --- */
+    position: relative; /* Permite que los elementos con position: absolute; dentro de él se posicionen correctamente */
+    overflow: hidden; /* Oculta cualquier parte que se salga del contenedor */
+}
 
-  .upload-area:hover {
+.upload-area:hover {
     background-color: #e9ecef;
-  }
+}
 
-  .upload-area input[type="file"] {
-    display: none;
-  }
-
-  .custom-file-label {
-    display: inline-block;
+.custom-file-label {
+    display: inline-block; /* Para que parezca un botón */
     margin-top: 10px;
     padding: 8px 16px;
-    background-color: #003f53;
+    background-color: #003f53; /* Tu color de botón */
     color: white;
     border-radius: 4px;
     cursor: pointer;
-  }
+    /* --- ¡IMPORTANTE! PARA POSICIONAR EL INPUT INTERNO --- */
+    position: relative; /* Permite que el input type="file" (que va DENTRO) se posicione absolutamente */
+    overflow: hidden;   /* Oculta el input si se desborda (aunque lo haremos 100%) */
+    z-index: 0;         /* Asegura que el label esté "debajo" del input invisible */
+}
 
-  .custom-file-label:hover {
+.custom-file-label:hover {
     background-color: #00566d;
+}
+
+/* --- ¡ESTO ES LO MÁS CRÍTICO! OCULTA Y POSICIONA EL INPUT NATIVO --- */
+/* Esta regla aplica solo al input type="file" que está ANIDADO dentro de un .custom-file-label */
+.custom-file-label input[type="file"] {
+    position: absolute; /* Saca el input del flujo normal del documento */
+    top: 0;             /* Lo pega al borde superior de su padre (.custom-file-label) */
+    left: 0;            /* Lo pega al borde izquierdo de su padre */
+    width: 100%;        /* Lo expande para cubrir todo el ancho del .custom-file-label */
+    height: 100%;       /* Lo expande para cubrir toda la altura del .custom-file-label */
+    opacity: 0;         /* ¡LO HACE COMPLETAMENTE INVISIBLE! */
+    cursor: pointer;    /* Mantiene el cursor de puntero, indicando que es clicable */
+    z-index: 1;         /* ¡Lo coloca POR ENCIMA del contenido visible del .custom-file-label!
+                           Así, el clic en tu botón visible golpea el input invisible. */
+}
+
+/* Estilo para el span que mostrará el nombre del archivo seleccionado */
+.file-name-display {
+    display: block;      /* Hace que el span ocupe su propia línea */
+    margin-top: 10px;    /* Espacio encima del nombre del archivo */
+    font-size: 0.9em;    /* Tamaño de fuente más pequeño */
+    color: #555;         /* Color de texto gris */
+    word-break: break-all; /* Rompe palabras largas para que quepan */
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (min-width: 768px) {
+  .form-group.half {
+    width: calc(50% - 10px);
   }
-    /* Responsive para pantallas mayores a 768px */
-    @media (min-width: 768px) {
-      .form-group.half {
-        width: calc(50% - 10px);
-      }
-    }
+}
+/* --- FIN DE CORRECCIONES PARA EL ÁREA DE SUBIDA DE ARCHIVOS --- */
+
+/* ... Tus estilos para media queries, etc. ... */
+@media (min-width: 768px) {
+  .form-group.half {
+    width: calc(50% - 10px);
+  }
+}
   </style>
 </head>
 <body>
@@ -344,85 +380,44 @@ background: linear-gradient(270deg,rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227,
 
 
 
-<div class="form-group full">
-  <label class="form-label">Historia Clínica</label>
+@php
+    // Define los tipos de archivo aceptados para todos los campos si son los mismos
+    $acceptedFileTypes = '.pdf,.jpg';
+@endphp
 
-  <div class="upload-area" id="upload-area">
-    <p><strong>Suba aquí la historia clínica</strong></p>
-    <p>Arrastra y suelta archivos aquí</p>
-    
-    <label for="archivo" class="custom-file-label">Seleccionar archivos</label>
-    <input 
-      type="file" 
-      name="archivo[]" 
-      id="archivo" 
-      multiple 
-      required
-      accept=".pdf,.jpg"
-      class="@error('archivo') is-invalid @else @if(old('archivo')) is-valid @endif @enderror"
-    >
+{{-- Campo para HISTORIA CLÍNICA --}}
+{{-- Aquí le pasamos 'historia_clinica' como $id y $name --}}
+@include('components.component-archivo', [
+    'id' => 'historia_clinica', // Se asignará como ID del input y en el 'for' del label
+    'name' => 'historia_clinica', // Se asignará como nombre del input (Laravel lo usará para $request->historia_clinica)
+    'label' => 'Historia Clínica',
+    'helpText' => 'Suba aquí la historia clínica',
+    'multiple' => false, // O true, según necesites
+    'required' => true,
+    'accept' => $acceptedFileTypes,
+])
 
-    @error('archivo')
-      <div class="invalid-feedback d-block">{{ $message }}</div>
-    @else
-      @if(old('archivo'))
-        <div class="valid-feedback d-block">¡Archivo cargado correctamente!</div>
-      @endif
-    @enderror
-  </div>
-</div>
+@include('components.component-archivo', [
+    'id' => 'autorizacion', // Se asignará como ID del input y en el 'for' del label
+    'name' => 'autorizacion', // Se asignará como nombre del input (Laravel lo usará para $request->historia_clinica)
+    'label' => 'Autorización',
+    'helpText' => 'Suba aquí la autorización',
+    'multiple' => false, // O true, según necesites
+    'required' => true,
+    'accept' => $acceptedFileTypes,
+])
 
-<div class="form-group full">
-  <label class="form-label">Autorización</label>
 
-  <div class="upload-area" id="upload-area">
-    <p><strong>Suba aquí la autorización</strong></p>
-    <p>Arrastra y suelta archivos aquí</p>
-    
-    <label for="archivo" class="custom-file-label">Seleccionar archivos</label>
-    <input 
-      type="file" 
-      name="archivo[]" 
-      id="archivo" 
-      multiple 
-      class="@error('archivo') is-invalid @else @if(old('archivo')) is-valid @endif @enderror"
-    >
+@include('components.component-archivo', [
+    'id' => 'orden_medica', // Se asignará como ID del input y en el 'for' del label
+    'name' => 'orden_medica', // Se asignará como nombre del input (Laravel lo usará para $request->historia_clinica)
+    'label' => 'Orden Médica',
+    'helpText' => 'Suba aquí la orden médica',
+    'multiple' => false, // O true, según necesites
+    'required' => true,
+    'accept' => $acceptedFileTypes,
+])
 
-    @error('archivo')
-      <div class="invalid-feedback d-block">{{ $message }}</div>
-    @else
-      @if(old('archivo'))
-        <div class="valid-feedback d-block">¡Archivo cargado correctamente!</div>
-      @endif
-    @enderror
-  </div>
-</div>
-
-<div class="form-group full">
-  <label class="form-label">Orden Médica</label>
-
-  <div class="upload-area" id="upload-area">
-    <p><strong>Suba aquí la orden médica</strong></p>
-    <p>Arrastra y suelta archivos aquí</p>
-    
-    <label for="archivo" class="custom-file-label">Seleccionar archivos</label>
-    <input 
-      type="file" 
-      name="archivo[]" 
-      id="archivo" 
-      multiple 
-      class="@error('archivo') is-invalid @else @if(old('archivo')) is-valid @endif @enderror"
-    >
-
-    @error('archivo')
-      <div class="invalid-feedback d-block">{{ $message }}</div>
-    @else
-      @if(old('archivo'))
-        <div class="valid-feedback d-block">¡Archivo cargado correctamente!</div>
-      @endif
-    @enderror
-  </div>
-</div>
 
 
       <div class="form-group">
@@ -438,6 +433,33 @@ background: linear-gradient(270deg,rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227,
   </div>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Seleccionamos todos los inputs de tipo 'file' que están dentro de un '.custom-file-label'
+        document.querySelectorAll('.custom-file-label input[type="file"]').forEach(inputElement => {
+            // A cada input, le añadimos un "escuchador" para cuando se selecciona un archivo (el evento 'change')
+            inputElement.addEventListener('change', function(event) {
+                // Obtenemos el ID del input actual (ej. 'historia_clinica')
+                const inputId = this.id;
+                // Construimos el ID del span donde mostraremos el nombre (ej. 'historia_clinica-file-name')
+                const fileNameDisplay = document.getElementById(`${inputId}-file-name`);
+
+                // Verificamos si se seleccionaron archivos
+                if (this.files.length > 0) {
+                    if (this.multiple) {
+                        // Si el input permite múltiples archivos, mostramos todos los nombres
+                        fileNameDisplay.textContent = Array.from(this.files).map(file => file.name).join(', ');
+                    } else {
+                        // Si es un solo archivo, mostramos solo el nombre del primero
+                        fileNameDisplay.textContent = this.files[0].name;
+                    }
+                } else {
+                    // Si el usuario canceló la selección, volvemos al mensaje por defecto
+                    fileNameDisplay.textContent = 'Ningún archivo seleccionado';
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
