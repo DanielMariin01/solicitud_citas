@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Crypt;
 use App\Enums\SolicitudEstado;
+use Filament\Tables\Filters\DateFilter;
 
 class PacienteResource extends Resource
 {
@@ -25,7 +26,14 @@ class PacienteResource extends Resource
     {
         return $form
             ->schema([
-                //
+Forms\Components\Select::make('estado')
+    ->label('Estado de Solicitud')
+    ->options(SolicitudEstado::class)
+    ->required()
+    ->native(false)
+
+
+       
             ]);
     }
 
@@ -140,16 +148,14 @@ class PacienteResource extends Resource
     })
     ->html(),
 
-
-
-
-
-
-
-
-
-                    
-                
+     Tables\Columns\TextColumn::make('created_at') // Columna para mostrar la fecha de creación
+                    ->label('Fecha de Creación')
+                    ->sortable()
+                    ->dateTime(),
+                Tables\Columns\TextColumn::make('updated_at')  // Columna para mostrar la fecha de última actualización
+                    ->label('Última Actualización')
+                    ->sortable()
+                    ->dateTime(),   
             ])
             ->filters([
 
@@ -160,6 +166,9 @@ class PacienteResource extends Resource
                        'aprobada' => 'Aprobada',
                         'rechazada' => 'Rechazada',
                     ]),
+                //filtro por ultima fecha de creación
+             
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

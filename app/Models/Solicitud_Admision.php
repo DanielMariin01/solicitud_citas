@@ -8,6 +8,7 @@ class Solicitud_Admision extends Model
 {
     // Declarar llave primaria
     protected $table = 'solicitud_admisiones'; // Nombre de la tabla
+    
     protected $primaryKey = 'id_solicitud_admision';
 
     // Atributos que son asignables en masa

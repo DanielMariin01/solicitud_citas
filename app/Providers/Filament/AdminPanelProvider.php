@@ -32,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('60px')
             ->colors([
                 'primary' => '#1D4ED8',
+                'danger' => Color::Red, 
                 // poner imagen de logo (comentario)
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Ciudad;
+
+use App\Enums\SolicitudEstado; // Asegúrate de que esta línea esté presente
 use App\Models\Procedimiento;
 
 class Paciente extends Model
 
 {
+   
     // Indicar la tabla asociada al modelo
     protected $table = 'paciente';
     //declarar llave primaria
