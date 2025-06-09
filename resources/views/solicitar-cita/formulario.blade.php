@@ -252,7 +252,6 @@ select {
 </div>
 
 
-
   <div class="form-group half">
     <label for="" class="form-label">Celular</label>
     <input 
@@ -272,10 +271,6 @@ select {
         @endif
     @enderror
 </div>
-
-
-
-
 
       <div class="form-group half">
     <label for="correo" class="form-label">Correo</label>
@@ -322,7 +317,6 @@ select {
 </div>
  
 
-
 <div class="form-group half">
     <label for="id_eps" class="form-label">Seleccione su EPS</label>
     <select 
@@ -348,14 +342,6 @@ select {
 </div>
 
 
-
-
-
-
-
-
-
-
 <div class="form-group">
     <label for="procedimiento" class="form-label">Procedimiento</label>
     <textarea 
@@ -373,13 +359,23 @@ select {
         @endif
     @enderror
 </div>
-
-
-
-
-
-
-
+<div class="form-group">
+    <label for="observacion" class="form-label">Observacion</label>
+    <textarea 
+        name="observacion" 
+        id="observacion" 
+        rows="4"
+        placeholder="Ingrese aquí comentarios adicionales"
+        class="form-control @error('observacion') is-invalid @else @if(old('observacion')) is-valid @endif @enderror" required
+    >{{ old('observacion') }}</textarea>
+    @error('observacion')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @else
+        @if(old('observacion'))
+            <div class="valid-feedback"></div>
+        @endif
+    @enderror
+</div>
 @php
     // Define los tipos de archivo aceptados para todos los campos si son los mismos
     $acceptedFileTypes = '.pdf,.jpg';
@@ -417,16 +413,13 @@ select {
     'required' => true,
     'accept' => $acceptedFileTypes,
 ])
-
-
-
-      <div class="form-group">
-        <div class="form-check">
-          <input type="checkbox" id="terms" />
-          <label for="terms">Acepto términos y condiciones</label>
-        </div>
-        <div class="error">Debes aceptar antes de continuar.</div>
-      </div>
+      <!--<div class="form-group">
+        <!--<div class="form-check">
+          <!--<input type="checkbox" id="terms" />
+          <!--<label for="terms">Acepto términos y condiciones</label>
+        <!--</div>
+        <!--<div class="error">Debes aceptar antes de continuar.</div>
+      <!--</div>--->
 
       <button type="submit" class="btn-submit">Solicitar Cita</button>
     </form>

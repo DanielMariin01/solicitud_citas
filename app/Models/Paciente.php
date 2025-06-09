@@ -36,6 +36,11 @@ class Paciente extends Model
     {
         return $this->belongsTo(Ciudad::class, 'fk_ciudad', 'id_ciudad');
     }
+    // Relación con EPS
+    public function eps()
+    {
+        return $this->belongsTo(EPS::class, 'fk_eps', 'id_eps');
+    }
 
     // Relación con Procedimiento
   

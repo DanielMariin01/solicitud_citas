@@ -4,10 +4,10 @@ namespace App\Enums;
 
 enum SolicitudEstado: string
 {
-    case PENDIENTE_ADMISIONES = 'pendiente_admisiones';
+    case PENDIENTE = 'pendiente';
+    case ENVIADA_A_MEDICO = 'enviada_a_medico';
     case APROBADA = 'aprobada';
     case RECHAZADA = 'rechazada';
-    case REPROGRAMADA = 'reprogramada';
     case FINALIZADA = 'finalizada';
     case CANCELADA = 'cancelada';
 
@@ -19,10 +19,10 @@ enum SolicitudEstado: string
     public function label(): string
     {
         return match ($this) {
-            self::PENDIENTE_ADMISIONES => 'Pendiente de Admisiones',
+            self::PENDIENTE => 'Pendiente',
+            self::ENVIADA_A_MEDICO => 'Enviada a Médico',
             self::APROBADA => 'Aprobada',
             self::RECHAZADA => 'Rechazada',
-            self::REPROGRAMADA => 'Reprogramada',
             self::FINALIZADA => 'Finalizada',
             self::CANCELADA => 'Cancelada',
         };
@@ -36,12 +36,13 @@ enum SolicitudEstado: string
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::PENDIENTE_ADMISIONES => 'warning', // Amarillo
+            self::PENDIENTE => 'warning', // Amarillo
+            self::ENVIADA_A_MEDICO => 'info', // Azul claro
             self::APROBADA => 'success', // Verde
             self::RECHAZADA => 'danger',  // Rojo
-            self::REPROGRAMADA => 'info', // Azul claro
             self::FINALIZADA => 'gray', // Gris
             self::CANCELADA => 'danger', // Rojo
         };
     }
+    
 }
