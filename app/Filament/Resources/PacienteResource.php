@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Crypt;
+use App\Enums\SolicitudEstado;
 
 class PacienteResource extends Resource
 {
@@ -31,10 +33,133 @@ class PacienteResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('nombre')
+                ->label('Nombre')
+                ->sortable()
+                ->searchable()
+                ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
+
+            Tables\Columns\TextColumn::make('apellido')
+                ->label('Apellido')
+                ->sortable()
+                ->searchable()
+                ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
+
+            Tables\Columns\TextColumn::make('tipo_identificacion')
+                ->label('Tipo de Identificación')
+                ->sortable()
+                ->searchable()
+                ->formatStateUsing(fn ($state) => Crypt::decryptString($state))
+                // Si no está cifrado, no hace falta desencriptar
+                ,
+
+            Tables\Columns\TextColumn::make('numero_identificacion')
+                ->label('Número de Identificación')
+                ->sortable()
+                ->searchable()
+                ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
+
+            Tables\Columns\TextColumn::make('correo')
+                ->label('Correo Electrónico')
+                ->sortable()
+                ->searchable()
+                ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
+
+            Tables\Columns\TextColumn::make('fk_ciudad.nombre')
+                ->label('Ciudad'),
+
+            Tables\Columns\TextColumn::make('fk_eps.nombre')
+                ->label('EPS'),
+
+            Tables\Columns\TextColumn::make('celular')
+                ->label('Celular')
+                ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
+
+            Tables\Columns\TextColumn::make('procedimiento')
+                ->label('Procedimiento')
+                ->sortable()
+                ->searchable()
+                ->formatStateUsing(fn ($state) => Crypt::decryptString($state))
+                ->extraHeaderAttributes([
+        'style' => 'min-width: 200px;', // Establece un ancho mínimo para el encabezado
+    ])
+    ->extraAttributes([
+        'class' => 'whitespace-normal', // Asegura que el texto se envuelva (aunque ->wrap() ya lo hace)
+        'style' => 'max-width: 300px; word-break: break-word;', // Ayuda con palabras muy largas
+    ]),
+
+           Tables\Columns\BadgeColumn::make('estado')
+    ->label('Estado')
+    ->sortable()
+    ->colors([
+        'warning' => 'pendiente',
+        'info' => 'enviada_a_medico',
+        'success' => 'aprobada',
+        'danger' => ['rechazada', 'cancelada'],
+        'gray' => 'finalizada',
+    ])
+    ->formatStateUsing(function ($state) {
+        try {
+            return SolicitudEstado::from($state)->label();
+        } catch (\ValueError $e) {
+            return $state;
+        }
+    }),
+            Tables\Columns\TextColumn::make('observacion')
+                ->label('Observación')
+                ->sortable()
+                ->searchable()
+                ->wrap() 
+                ->formatStateUsing(fn ($state) => Crypt::decryptString($state))
+                ->extraHeaderAttributes([
+        'style' => 'min-width: 200px;', // Establece un ancho mínimo para el encabezado
+    ])
+    ->extraAttributes([
+        'class' => 'whitespace-normal', // Asegura que el texto se envuelva (aunque ->wrap() ya lo hace)
+        'style' => 'max-width: 300px; word-break: break-word;', // Ayuda con palabras muy largas
+    ]),
+            
+            //mostrar los archivos subidos pero que se puedan descargar
+ Tables\Columns\TextColumn::make('historia_clinica')
+    ->label('Historia Clínica')
+    ->formatStateUsing(function ($state) {
+        if (!$state) {
+            return '<span class="text-gray-500 italic">No disponible</span>';
+        }
+
+        $url = asset('storage/' . $state);
+        $ext = strtolower(pathinfo($state, PATHINFO_EXTENSION));
+
+        // Solo un ícono simple SVG con color negro para prueba
+        $icon = match ($ext) {
+            'pdf' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" viewBox="0 0 24 24"><path d="M19 2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8l5-5V4a2 2 0 0 0-2-2z"/></svg>',
+            default => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>',
+        };
+
+        return '<a href="' . $url . '" target="_blank" style="display:inline-flex; align-items:center; gap:6px; color:#1d4ed8; font-weight:600;">' . $icon . ' Descargar</a>';
+    })
+    ->html(),
+
+
+
+
+
+
+
+
+
+                    
+                
             ])
             ->filters([
-                //
+
+                // Puedes agregar filtros personalizados aquí
+                 Tables\Filters\SelectFilter::make('estado')
+                    ->options([
+                      'pendiente' => 'Pendiente',
+                       'aprobada' => 'Aprobada',
+                        'rechazada' => 'Rechazada',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
