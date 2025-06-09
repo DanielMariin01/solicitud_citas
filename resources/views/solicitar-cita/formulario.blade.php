@@ -12,7 +12,12 @@
     }
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(270deg, rgba(83, 150, 237, 1) 0%, rgba(195, 221, 227, 1) 53%, rgba(83, 150, 237, 1) 100%);
+background: linear-gradient(
+  270deg,
+  rgba(83, 150, 237, 1) 0%,      /* Azul suave */
+  rgba(195, 221, 227, 1) 50%,    /* Azul claro cielo */
+  rgba(83, 150, 237, 1) 100%     /* Azul suave */
+);
   margin: 0;
   padding: 40px 20px;
   display: flex;
@@ -20,7 +25,6 @@ body {
   align-items: flex-start;
   min-height: 100vh;
 }
-
 .form-container {
   background-color: #fff;
   padding: 30px;
@@ -180,7 +184,8 @@ select {
 <body>
   <div class="form-container">
     <h2>Solicitar Cita</h2>
-    <form >
+    <form action="{{ route('solicitar-cita.guardar') }}" method="POST" enctype="multipart/form-data">   
+    @csrf
    <div class="form-group half">
     <label for="nombre" class="form-label">Nombre</label>
     <input 

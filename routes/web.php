@@ -17,5 +17,6 @@ Route::get('/solicitar-cita', function () {
 });
 
 Route::get('/solicitar-cita', [FormularioCitaController::class, 'mostrarFormulario']);
+Route::post('/solicitar-cita', [FormularioCitaController::class, 'guardar'])->name('solicitar-cita.guardar');
 
 

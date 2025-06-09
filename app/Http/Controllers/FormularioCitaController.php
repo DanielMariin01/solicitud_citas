@@ -28,17 +28,17 @@ public function guardar(Request $request)
     $request->validate([
         'nombre'           => 'required|string|max:255',
         'apellido'           => 'required|string|max:255',
-        'tipo_identificacion' => 'required|string|max:50',
-        'numero_identificacion' => 'required|string|max:20',
+        'tipo_identificacion' => 'required|string|max:255',
+        'numero_identificacion' => 'required|string|max:255',
         'correo'            => 'required|email',
         'id_ciudad'        => 'required|exists:ciudad,id_ciudad',
-        'procedimiento'      => 'nullable|string|max:255',
-        'id_eps'           => 'required|exists:eps,id_eps',
-        'celular'          => 'required|string|max:15',
+        'procedimiento'      => 'nullable|string|max:1000',
+        'id_eps'           => 'required|exists:tipo_eps,id_eps',
+        'celular'          => 'required|string|max:255',
         'historia_clinica' => 'required|mimes:pdf,jpg,jpeg|max:2048',
         'autorizacion'     => 'required|mimes:pdf,jpg,jpeg|max:2048',
         'orden_medica'     => 'required|mimes:pdf,jpg,jpeg|max:2048',
-        'estado'           => 'nullable|string|max:50',
+        'estado'           => 'nullable|string|max:255',
         'observacion'      => 'nullable|string|max:1000',
     ]);
 
