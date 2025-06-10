@@ -23,7 +23,7 @@ class Solicitud_Admision extends Model
     // Relación con Paciente
     public function paciente()
     {
-        return $this->belongsTo(Paciente::class, 'fk_paciente');
+        return $this->belongsTo(Paciente::class, 'fk_paciente', 'id_paciente');
     }
 
     
