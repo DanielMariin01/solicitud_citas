@@ -30,6 +30,8 @@ class SolicitudAdmisionResource extends Resource
       protected static ?string $navigationGroup = 'Respuesta Solicitudes';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel = 'Respuesta Solicitudes';
+     protected static ?string $modelLabel = 'Responder Solicitud';
+   
 
 
     public static function form(Form $form): Form

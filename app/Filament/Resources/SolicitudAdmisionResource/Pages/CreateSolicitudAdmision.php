@@ -14,6 +14,18 @@ class CreateSolicitudAdmision extends CreateRecord
 {
     protected static string $resource = SolicitudAdmisionResource::class;
 
+
+
+        public function getTitle(): string
+    {
+        // Puedes devolver el título que quieras, sin la palabra "Crear".
+        // Por ejemplo, el mismo que tu $modelLabel o algo diferente.
+        return 'Responder Solicitud';
+        // O si quieres que tome el mismo nombre del $modelLabel del Resource:
+        // return static::getResource()::getModelLabel();
+    }
+
+
    protected function afterCreate(): void
     {
         // $this->record es la instancia de la SolicitudAdmisiones que acaba de ser creada.
@@ -34,4 +46,5 @@ class CreateSolicitudAdmision extends CreateRecord
             Log::warning('Paciente no encontrado para la solicitud de admisión ID: ' . $solicitudAdmision->id);
         }
     }
+
 }

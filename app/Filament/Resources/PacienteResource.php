@@ -25,6 +25,7 @@ class PacienteResource extends Resource
     protected static ?string $navigationGroup = 'Solicitudes';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel = 'Solicitudes Admisiones';
+    protected static ?string $pluralModelLabel = 'Gestión de Solicitudes'; 
 
     public static function form(Form $form): Form
     {
@@ -186,34 +187,24 @@ class PacienteResource extends Resource
                     ->label('Fecha de Creación')
                     ->sortable()
                     ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')  // Columna para mostrar la fecha de última actualización
-                    ->label('Última Actualización')
-                    ->sortable()
-                    ->dateTime(),
+                //Tables\Columns\TextColumn::make('updated_at')  // Columna para mostrar la fecha de última actualización
+                   // ->label('Última Actualización')
+                    //->sortable()
+                    //->dateTime(),
             ])
             ->filters([
                 // Puedes agregar filtros personalizados aquí
-                Tables\Filters\SelectFilter::make('estado')
-                    ->label('Estado')
-                    ->options([
-                      
-                        \App\Enums\SolicitudEstado::APROBADA->value => 'Aprobada',
-                        \App\Enums\SolicitudEstado::RECHAZADA->value => 'Rechazada',
-                        \App\Enums\SolicitudEstado::CANCELADA->value => 'Cancelada',
-                        \App\Enums\SolicitudEstado::ENVIADA_A_MEDICO->value => 'Enviada a Médico',
-                        \App\Enums\SolicitudEstado::FINALIZADA->value => 'Finalizada',
-                    ])
-                    ->searchable(), // permite buscar dentro de las opciones del select
+                 // permite buscar dentro de las opciones del select
 
                     Tables\Filters\SelectFilter::make('id_eps')
                     ->label('EPS')
                   ->relationship('eps', 'nombre')
-                  ->searchable(),
+                  //->searchable(),
 
             
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                //Tables\Actions\EditAction::make(),
                //Tables\Actions\Action::make('responderSolicitud')
                     //->label('Responder')
                    // ->icon('heroicon-o-chat-bubble-left-right') // Icono de chat
@@ -240,7 +231,8 @@ class PacienteResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+             ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
@@ -254,8 +246,8 @@ class PacienteResource extends Resource
     {
         return [
             'index' => Pages\ListPacientes::route('/'),
-            'create' => Pages\CreatePaciente::route('/create'),
-            'edit' => Pages\EditPaciente::route('/{record}/edit'),
+            //'create' => Pages\CreatePaciente::route('/create'),
+            //'edit' => Pages\EditPaciente::route('/{record}/edit'),
         ];
     }
       public static function getEloquentQuery(): Builder
@@ -263,5 +255,6 @@ class PacienteResource extends Resource
         // Esto filtrará la tabla para que solo muestre registros donde 'estado' sea 'aprobada'.
         // Los usuarios no podrán cambiar este filtro desde la UI.
         return parent::getEloquentQuery()->where('estado', 'pendiente');
+
     }
 }
