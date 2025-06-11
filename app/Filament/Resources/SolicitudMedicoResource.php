@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SolicitudMedicoResource\Pages;
 use App\Filament\Resources\SolicitudMedicoResource\RelationManagers;
+use App\Models\Solicitud_Medico;
 use App\Models\SolicitudMedico;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,12 +13,23 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Enums\SolicitudEstado;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\BadgeColumn;
+
+use Illuminate\Support\Facades\Crypt;
+use App\Models\Paciente;
+
 
 class SolicitudMedicoResource extends Resource
 {
-    protected static ?string $model = SolicitudMedico::class;
+    protected static ?string $model = Solicitud_Medico::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+      protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+      protected static ?string $navigationGroup = 'Solicitudes';
+    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationLabel = 'Solicitudes Medico';
+
 
     public static function form(Form $form): Form
     {
@@ -31,13 +43,150 @@ class SolicitudMedicoResource extends Resource
     {
         return $table
             ->columns([
-                //
+                 Tables\Columns\TextColumn::make('id_solicitud_admision')
+                    ->label('ID Solicitud')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('paciente.nombre') // Asegúrate de que 'nombre_completo' sea un campo válido
+                    ->label('Nombre')
+                    ->sortable()
+                    ->searchable()
+                    ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
+                Tables\Columns\TextColumn::make('paciente.apellido') // Asegúrate de que 'nombre_completo' sea un campo válido
+                    ->label('Apellido')
+                    ->sortable()
+                    ->searchable()
+                    ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
+                Tables\Columns\TextColumn::make('paciente.tipo_identificacion') // Asegúrate de que 'nombre_completo' sea un campo válido
+                    ->label('Tipo de Identificación')
+                    ->sortable()
+                    ->searchable()
+                    ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
+                Tables\Columns\TextColumn::make('paciente.numero_identificacion') // Asegúrate de que 'nombre_completo' sea un campo válido
+                    ->label('Número de Identificación')
+                    ->sortable()
+                    ->searchable()
+                    ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
+               
+                Tables\Columns\TextColumn::make('paciente.historia_clinica') // <-- ¡Aquí usas la notación de punto!
+                    ->label('Historia Clínica')
+                    ->formatStateUsing(function ($state) {
+                        if (empty($state)) { // Usar empty para cubrir null, cadenas vacías o 0
+                            return '<span class="text-gray-500 italic">No disponible</span>';
+                        }
+
+                        $url = asset('storage/' . $state);
+                        $ext = strtolower(pathinfo($state, PATHINFO_EXTENSION));
+
+                        // Usar 'currentColor' para que el SVG tome el color del texto del enlace
+                        $icon = match ($ext) {
+                            'pdf' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8l5-5V4a2 2 0 0 0-2-2z"/></svg>',
+                            'png', 'jpg', 'jpeg', 'gif' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-1.5 15h-11L6 14.5 9 12l2.5 2.5L15 11z"/></svg>',
+                            default => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>',
+                        };
+
+                        // Clases de Filament para un buen estilo de enlace
+                        return '<a href="' . $url . '" target="_blank" class="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold">' . $icon . 'Visualizar                                                                                                                                                                                                                                                                                                                                                                               </a>';
+                    })
+                    ->html(),
+                
+                    Tables\Columns\TextColumn::make('paciente.autorizacion') // <-- ¡Aquí usas la notación de punto!
+                    ->label('Autorizacion')
+                    ->formatStateUsing(function ($state) {
+                        if (empty($state)) { // Usar empty para cubrir null, cadenas vacías o 0
+                            return '<span class="text-gray-500 italic">No disponible</span>';
+                        }
+
+                        $url = asset('storage/' . $state);
+                        $ext = strtolower(pathinfo($state, PATHINFO_EXTENSION));
+
+                        // Usar 'currentColor' para que el SVG tome el color del texto del enlace
+                        $icon = match ($ext) {
+                            'pdf' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8l5-5V4a2 2 0 0 0-2-2z"/></svg>',
+                            'png', 'jpg', 'jpeg', 'gif' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-1.5 15h-11L6 14.5 9 12l2.5 2.5L15 11z"/></svg>',
+                            default => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>',
+                        };
+
+                        // Clases de Filament para un buen estilo de enlace
+                        return '<a href="' . $url . '" target="_blank" class="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold">' . $icon . 'Visualizar                                                                                                                                                                                                                                                                                                                                                                               </a>';
+                    })
+                    ->html(),
+
+
+                    Tables\Columns\TextColumn::make('paciente.orden_medica') // <-- ¡Aquí usas la notación de punto!
+                    ->label('Orden medica')
+                    ->formatStateUsing(function ($state) {
+                        if (empty($state)) { // Usar empty para cubrir null, cadenas vacías o 0
+                            return '<span class="text-gray-500 italic">No disponible</span>';
+                        }
+
+                        $url = asset('storage/' . $state);
+                        $ext = strtolower(pathinfo($state, PATHINFO_EXTENSION));
+
+                        // Usar 'currentColor' para que el SVG tome el color del texto del enlace
+                        $icon = match ($ext) {
+                            'pdf' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8l5-5V4a2 2 0 0 0-2-2z"/></svg>',
+                            'png', 'jpg', 'jpeg', 'gif' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-1.5 15h-11L6 14.5 9 12l2.5 2.5L15 11z"/></svg>',
+                            default => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>',
+                        };
+
+                        // Clases de Filament para un buen estilo de enlace
+                        return '<a href="' . $url . '" target="_blank" class="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold">' . $icon . 'Visualizar                                                                                                                                                                                                                                                                                                                                                                               </a>';
+                    })
+                    ->html(),
+
+            
+                BadgeColumn::make('estado')
+                    ->label('Estado')
+                    ->formatStateUsing(fn (string $state) => SolicitudEstado::from($state)->label())
+                    ->color(fn (string $state) => SolicitudEstado::from($state)->getColor())
+                    ->formatStateUsing(function ($state) {                                                                                           
+                        try {
+                            return SolicitudEstado::from($state)->label();
+                        } catch (\ValueError $e) {
+                            return $state;
+                        }
+                    }),
+
+
+
+
+
+                
+                //Tables\Columns\TextColumn::make('estado')
+                    //->label('Estado de Solicitud')
+                    //->enum(SolicitudEstado::asSelectArray()), // Muestra el estado como texto legible
+                Tables\Columns\TextColumn::make('comentario')
+                    ->label('Comentario')
+                    ->limit(1000)
+                    ->extraHeaderAttributes([
+                        'style' => 'min-width: 200px;', // Establece un ancho mínimo para el encabezado
+                    ])
+                    ->extraAttributes([
+                        'class' => 'whitespace-normal', // Asegura que el texto se envuelva (aunque ->wrap() ya lo hace)
+                        'style' => 'max-width: 300px; word-break: break-word;', // Ayuda con palabras muy largas
+                    ]), 
+                //agregar columna created_at y updated_at
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Fecha de Creación')
+                    ->dateTime('d/m/Y H:i:s'),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Fecha de Actualización')
+                    ->dateTime('d/m/Y H:i:s'),
+       
+    
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                  Tables\Actions\Action::make('Responder')
+                    ->url(fn (Solicitud_Medico $record): string => SolicitudAdmisionResource::getUrl('create', [
+    'fk_paciente' => $record->paciente->id_paciente, // o $record->paciente_id dependiendo de cómo esté definido
+]))
+                    ->icon('heroicon-o-chat-bubble-left-right')
+                    ->color('primary'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -60,5 +209,12 @@ class SolicitudMedicoResource extends Resource
             'create' => Pages\CreateSolicitudMedico::route('/create'),
             'edit' => Pages\EditSolicitudMedico::route('/{record}/edit'),
         ];
+    }
+
+          public static function getEloquentQuery(): Builder
+    {
+        // Esto filtrará la tabla para que solo muestre registros donde 'estado' sea 'aprobada'.
+        // Los usuarios no podrán cambiar este filtro desde la UI.
+        return parent::getEloquentQuery()->where('estado', 'enviada_a_medico');
     }
 }

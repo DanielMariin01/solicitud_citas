@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SolicitudAdmisionResource\Pages;
-
+use App\Filament\Resources\SolicitudAgendamientoResource\Pages;
+use App\Filament\Resources\SolicitudAgendamientoResource\RelationManagers;
+use App\Models\Solicitud_agendamiento;
+use App\Models\SolicitudAgendamiento;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -11,7 +13,6 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\Solicitud_Admision;
 use App\Enums\SolicitudEstado;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\BadgeColumn;
@@ -19,53 +20,26 @@ use Filament\Tables\Columns\BadgeColumn;
 use Illuminate\Support\Facades\Crypt;
 
 
-
-
-
-class SolicitudAdmisionResource extends Resource
+class SolicitudAgendamientoResource extends Resource
 {
-    protected static ?string $model = Solicitud_Admision::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
-      protected static ?string $navigationGroup = 'Respuesta Solicitudes';
+    protected static ?string $model = Solicitud_agendamiento::class;
+protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+      protected static ?string $navigationGroup = 'Agendamiento';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationLabel = 'Respuesta Solicitudes';
+    protected static ?string $navigationLabel = 'Agendamiento';
 
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-              Forms\Components\Select::make('estado')
+                     Forms\Components\Select::make('estado')
                     ->label('Estado de Solicitud')
                     ->options(SolicitudEstado::class)
                     ->required()
-                    ->native(false),
-                Forms\Components\TextInput::make('comentario')
-                    ->label('Comentario')
-                    ->maxLength(1000),
-                 Select::make('fk_paciente') // Usa Select si quieres que sea un desplegable de pacientes
-                    ->label('Paciente Asociado') // Etiqueta para el formulario
-                    ->relationship('paciente', 'nombre') // 'paciente' es el método de relación en tu modelo SolicitudAdmisiones
-                                                                  // 'nombre_completo' es la columna que quieres mostrar en el desplegable
-                                                                  // (si no tienes 'nombre_completo', usa 'nombre' o el campo que identifique al paciente)
-                    ->required() // Si es un campo obligatorio
-                    ->default(fn () => request()->query('fk_paciente')) // <-- ¡AQUÍ SE PRE-RELLENA DESDE LA URL!
-                    ->disabled() // Hace que el campo sea visible pero no editable por el usuario
-                    ->dehydrated(true), // Asegura que el valor se incluya cuando se guarden los datos
-
-                // Si prefieres que sea un campo de texto oculto para el ID del paciente:
-                // TextInput::make('fk_paciente')
-                //     ->hidden() // Lo hace invisible en el formulario
-                //     ->required() // Si es obligatorio
-                //     ->default(fn () => request()->query('fk_paciente')), 
-            
+                    ->native(false)
             ]);
     }
-    public static function getEloquentQuery(): Builder
-{
-    return parent::getEloquentQuery()->with('paciente');
-}
 
     public static function table(Table $table): Table
     {
@@ -202,22 +176,8 @@ class SolicitudAdmisionResource extends Resource
                     ->label('Fecha de Actualización')
                     ->dateTime('d/m/Y H:i:s'),
        
-    
-          
-            
             ])
             ->filters([
-                 Tables\Filters\SelectFilter::make('estado')
-                    ->label('Estado')
-                    ->options([
-                        \App\Enums\SolicitudEstado::PENDIENTE->value => 'Pendiente',
-                        \App\Enums\SolicitudEstado::APROBADA->value => 'Aprobada',
-                        \App\Enums\SolicitudEstado::RECHAZADA->value => 'Rechazada',
-                        \App\Enums\SolicitudEstado::CANCELADA->value => 'Cancelada',
-                        \App\Enums\SolicitudEstado::ENVIADA_A_MEDICO->value => 'Enviada a Médico',
-                        \App\Enums\SolicitudEstado::FINALIZADA->value => 'Finalizada',
-                    ])
-                    ->searchable(),
                 //
             ])
             ->actions([
@@ -240,9 +200,16 @@ class SolicitudAdmisionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSolicitudAdmisions::route('/'),
-            'create' => Pages\CreateSolicitudAdmision::route('/create'),
-            'edit' => Pages\EditSolicitudAdmision::route('/{record}/edit'),
+            'index' => Pages\ListSolicitudAgendamientos::route('/'),
+            'create' => Pages\CreateSolicitudAgendamiento::route('/create'),
+            'edit' => Pages\EditSolicitudAgendamiento::route('/{record}/edit'),
         ];
+    }
+
+          public static function getEloquentQuery(): Builder
+    {
+        // Esto filtrará la tabla para que solo muestre registros donde 'estado' sea 'aprobada'.
+        // Los usuarios no podrán cambiar este filtro desde la UI.
+        return parent::getEloquentQuery()->where('estado', 'aprobada');
     }
 }

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Solicitud_Medico extends Model
+class Solicitud_agendamiento extends Model
 {
-  protected $table = 'solicitud_admisiones'; // Nombre de la tabla
+     protected $table = 'solicitud_admisiones'; // Nombre de la tabla
     
     protected $primaryKey = 'id_solicitud_admision';
 
@@ -24,5 +24,4 @@ class Solicitud_Medico extends Model
     {
         return $this->belongsTo(Paciente::class, 'fk_paciente', 'id_paciente');
     }
-    
 }

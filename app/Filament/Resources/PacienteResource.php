@@ -137,7 +137,7 @@ class PacienteResource extends Resource
                             default => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>',
                         };
 
-                        return '<a href="' . $url . '" target="_blank" style="display:inline-flex; align-items:center; gap:6px; color:#1d4ed8; font-weight:600;">' . $icon . 'Abrir</a>';
+                        return '<a href="' . $url . '" target="_blank" style="display:inline-flex; align-items:center; gap:6px; color:#1d4ed8; font-weight:600;">' . $icon . 'Visualizar</a>';
                     })
                     ->html(),
 
@@ -196,7 +196,7 @@ class PacienteResource extends Resource
                 Tables\Filters\SelectFilter::make('estado')
                     ->label('Estado')
                     ->options([
-                        \App\Enums\SolicitudEstado::PENDIENTE->value => 'Pendiente',
+                      
                         \App\Enums\SolicitudEstado::APROBADA->value => 'Aprobada',
                         \App\Enums\SolicitudEstado::RECHAZADA->value => 'Rechazada',
                         \App\Enums\SolicitudEstado::CANCELADA->value => 'Cancelada',
@@ -204,7 +204,13 @@ class PacienteResource extends Resource
                         \App\Enums\SolicitudEstado::FINALIZADA->value => 'Finalizada',
                     ])
                     ->searchable(), // permite buscar dentro de las opciones del select
-                //filtro por ultima fecha de creación
+
+                    Tables\Filters\SelectFilter::make('id_eps')
+                    ->label('EPS')
+                  ->relationship('eps', 'nombre')
+                  ->searchable(),
+
+            
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -251,5 +257,11 @@ class PacienteResource extends Resource
             'create' => Pages\CreatePaciente::route('/create'),
             'edit' => Pages\EditPaciente::route('/{record}/edit'),
         ];
+    }
+      public static function getEloquentQuery(): Builder
+    {
+        // Esto filtrará la tabla para que solo muestre registros donde 'estado' sea 'aprobada'.
+        // Los usuarios no podrán cambiar este filtro desde la UI.
+        return parent::getEloquentQuery()->where('estado', 'pendiente');
     }
 }
