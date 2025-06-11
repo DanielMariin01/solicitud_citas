@@ -35,7 +35,11 @@ class SolicitudMedicoResource extends Resource
     {
         return $form
             ->schema([
-                //
+                      Forms\Components\Select::make('estado')
+                    ->label('Estado de Solicitud')
+                    ->options(SolicitudEstado::class)
+                    ->required()
+                    ->native(false)
             ]);
     }
 
@@ -181,18 +185,19 @@ class SolicitudMedicoResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                  Tables\Actions\Action::make('Responder')
-                    ->url(fn (Solicitud_Medico $record): string => SolicitudAdmisionResource::getUrl('create', [
-    'fk_paciente' => $record->paciente->id_paciente, // o $record->paciente_id dependiendo de cómo esté definido
-]))
-                    ->icon('heroicon-o-chat-bubble-left-right')
-                    ->color('primary'),
+                 // Tables\Actions\Action::make('Responder')
+                    //->url(fn (Solicitud_Medico $record): string => SolicitudAdmisionResource::getUrl('create', [
+    //'fk_paciente' => $record->paciente->id_paciente, // o $record->paciente_id dependiendo de cómo esté definido
+//]//))
+                    //->icon('heroicon-o-chat-bubble-left-right')
+                    //->color('primary'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
@@ -207,7 +212,7 @@ class SolicitudMedicoResource extends Resource
         return [
             'index' => Pages\ListSolicitudMedicos::route('/'),
             'create' => Pages\CreateSolicitudMedico::route('/create'),
-            'edit' => Pages\EditSolicitudMedico::route('/{record}/edit'),
+            //'edit' => Pages\EditSolicitudMedico::route('/{record}/edit'),
         ];
     }
 

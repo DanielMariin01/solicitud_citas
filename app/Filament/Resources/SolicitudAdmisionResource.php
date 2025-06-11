@@ -38,14 +38,22 @@ class SolicitudAdmisionResource extends Resource
     {
         return $form
             ->schema([
-              Forms\Components\Select::make('estado')
-                    ->label('Estado de Solicitud')
-                    ->options(SolicitudEstado::class)
-                    ->required()
-                    ->native(false),
+               Forms\Components\Select::make('estado')
+                ->required()
+                ->options([
+                
+                    'enviada_a_medico' => 'Enviada_a_Medico',
+                    'agendar' => 'Agendar', // <-- Asegúrate que esta clave sea 'agendar' (string)
+                    'cancelada' => 'Cancelada',
+                    'finalizada' => 'Finalizada',
+                ])
+                ->native(false),
+                    
                 Forms\Components\TextInput::make('comentario')
                     ->label('Comentario')
                     ->maxLength(1000),
+
+                
                  Select::make('fk_paciente') // Usa Select si quieres que sea un desplegable de pacientes
                     ->label('Paciente Asociado') // Etiqueta para el formulario
                     ->relationship('paciente', 'nombre') // 'paciente' es el método de relación en tu modelo SolicitudAdmisiones
@@ -54,7 +62,8 @@ class SolicitudAdmisionResource extends Resource
                     ->required() // Si es un campo obligatorio
                     ->default(fn () => request()->query('fk_paciente')) // <-- ¡AQUÍ SE PRE-RELLENA DESDE LA URL!
                     ->disabled() // Hace que el campo sea visible pero no editable por el usuario
-                    ->dehydrated(true), // Asegura que el valor se incluya cuando se guarden los datos
+                    ->dehydrated(true) // Asegura que el valor se incluya cuando se guarden los datos
+                    
 
                 // Si prefieres que sea un campo de texto oculto para el ID del paciente:
                 // TextInput::make('fk_paciente')
@@ -213,8 +222,7 @@ class SolicitudAdmisionResource extends Resource
                     ->label('Estado')
                     ->options([
                         \App\Enums\SolicitudEstado::PENDIENTE->value => 'Pendiente',
-                        \App\Enums\SolicitudEstado::APROBADA->value => 'Aprobada',
-                        \App\Enums\SolicitudEstado::RECHAZADA->value => 'Rechazada',
+                        \App\Enums\SolicitudEstado::AGENDAR->value => 'agendar',
                         \App\Enums\SolicitudEstado::CANCELADA->value => 'Cancelada',
                         \App\Enums\SolicitudEstado::ENVIADA_A_MEDICO->value => 'Enviada a Médico',
                         \App\Enums\SolicitudEstado::FINALIZADA->value => 'Finalizada',

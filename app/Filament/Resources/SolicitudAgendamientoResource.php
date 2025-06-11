@@ -210,6 +210,6 @@ protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
     {
         // Esto filtrará la tabla para que solo muestre registros donde 'estado' sea 'aprobada'.
         // Los usuarios no podrán cambiar este filtro desde la UI.
-        return parent::getEloquentQuery()->where('estado', 'aprobada');
+        return parent::getEloquentQuery()->where('estado', 'agendar');
     }
 }

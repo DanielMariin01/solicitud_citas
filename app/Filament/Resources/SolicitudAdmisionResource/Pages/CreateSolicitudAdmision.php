@@ -24,8 +24,29 @@ class CreateSolicitudAdmision extends CreateRecord
         // O si quieres que tome el mismo nombre del $modelLabel del Resource:
         // return static::getResource()::getModelLabel();
     }
+        protected function getCreateFormAction(): Actions\Action
+    {
+        return Actions\Action::make('create')
+            ->label('Guardar') // <-- ¡Cambia el texto aquí!
+            ->submit('create'); // Importante: debe mantener el 'submit' al mismo método que el original
+    }
 
+    // **¡AÑADE ESTE MÉTODO PARA ELIMINAR EL BOTÓN "CREAR Y CREAR OTRO"!**
+    // Si este método devuelve null, el botón no se mostrará.
+  public function getCreateAndCreateAnotherFormAction(): Actions\Action | null
+    {
+        return null; // <--- Esta es la clave para eliminar el botón.
+    }
 
+   protected function getFormActions(): array
+    {
+        return [
+            $this->getCreateFormAction(), // Mantiene el botón "Guardar Respuesta"
+            // Elimina o comenta la línea de abajo para el botón "Crear y crear otro"
+            // $this->getCreateAndCreateAnotherFormAction(), // Esto es lo que intentamos eliminar
+            $this->getCancelFormAction(), // Mantiene el botón "Cancelar"
+        ];
+    }
    protected function afterCreate(): void
     {
         // $this->record es la instancia de la SolicitudAdmisiones que acaba de ser creada.
