@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Crypt;
 use App\Enums\SolicitudEstado;
+use App\Enums\SolicitudEstadoPaciente;
 use Filament\Tables\Filters\DateFilter;
 use Filament\Tables\Columns\BadgeColumn;
 
@@ -204,6 +205,8 @@ class PacienteResource extends Resource
                     //->sortable()
                     //->dateTime(),
             ])
+              ->defaultPaginationPageOption(10)
+            ->paginationPageOptions([10, 25, 50, 100])
             ->filters([
                 // Puedes agregar filtros personalizados aquí
                  // permite buscar dentro de las opciones del select

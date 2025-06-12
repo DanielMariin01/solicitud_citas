@@ -191,6 +191,8 @@ protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
                     ->dateTime('d/m/Y H:i:s'),
        
             ])
+            ->defaultPaginationPageOption(10)
+            ->paginationPageOptions([10, 25, 50, 100])
             ->filters([
                 //
             ])
@@ -218,7 +220,7 @@ protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
         return [
             'index' => Pages\ListSolicitudAgendamientos::route('/'),
             'create' => Pages\CreateSolicitudAgendamiento::route('/create'),
-            'edit' => Pages\EditSolicitudAgendamiento::route('/{record}/edit'),
+            //'edit' => Pages\EditSolicitudAgendamiento::route('/{record}/edit'),
         ];
     }
 

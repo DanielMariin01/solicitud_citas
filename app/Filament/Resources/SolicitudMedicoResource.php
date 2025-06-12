@@ -55,10 +55,12 @@ class SolicitudMedicoResource extends Resource
                     ->options(SolicitudEstadoMedico::class)
                     ->required()
                     ->native(false),
+                    
 
                      Forms\Components\TextInput::make('comentario')
-                    ->label('Comentario')
+                    ->label('Observación')
                     ->maxLength(1000)
+                    ->required()
                     // Elimina ->dehydrateStateUsing(fn (string $state) => null)
                     // Elimina ->default(null)
                     // Elimina ->fillFromModel(false)
@@ -210,6 +212,8 @@ class SolicitudMedicoResource extends Resource
        
     
             ])
+              ->defaultPaginationPageOption(10)
+            ->paginationPageOptions([10, 25, 50, 100])
             ->filters([
                 //
             ])

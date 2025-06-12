@@ -9,6 +9,7 @@ use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth; // Asegúrate de importar Auth si lo usas para created_by
 use Illuminate\Support\Facades\Log;
+use App\Filament\Resources\PacienteResource;
 
 class CreateSolicitudAdmision extends CreateRecord
 {
@@ -66,6 +67,12 @@ class CreateSolicitudAdmision extends CreateRecord
         } else {
             Log::warning('Paciente no encontrado para la solicitud de admisión ID: ' . $solicitudAdmision->id);
         }
+    }
+
+      protected function getRedirectUrl(): string
+    {
+        // Redirige al index (listado) de PacienteResource
+        return PacienteResource::getUrl('index');
     }
 
 }

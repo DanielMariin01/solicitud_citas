@@ -54,7 +54,7 @@ class SolicitudAdmisionResource extends Resource
                     'enviada_a_medico' => 'Enviada_a_Medico',
                     'agendar' => 'Agendar', // <-- Asegúrate que esta clave sea 'agendar' (string)
                     'cancelada' => 'Cancelada',
-                    'finalizada' => 'Finalizada',
+               
                 ])
                 ->native(false),
                     
@@ -324,7 +324,7 @@ class SolicitudAdmisionResource extends Resource
         return [
             'index' => Pages\ListSolicitudAdmisions::route('/'),
             'create' => Pages\CreateSolicitudAdmision::route('/create'),
-            'edit' => Pages\EditSolicitudAdmision::route('/{record}/edit'),
+            //'edit' => Pages\EditSolicitudAdmision::route('/{record}/edit'),
         ];
     }
 }
