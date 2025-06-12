@@ -12,12 +12,7 @@
     }
 body {
   font-family: Arial, sans-serif;
-background: linear-gradient(
-  270deg,
-  rgba(83, 150, 237, 1) 0%,      /* Azul suave */
-  rgba(195, 221, 227, 1) 50%,    /* Azul claro cielo */
-  rgba(83, 150, 237, 1) 100%     /* Azul suave */
-);
+  background: #f3f7fa;
   margin: 0;
   padding: 40px 20px;
   display: flex;
@@ -26,10 +21,10 @@ background: linear-gradient(
   min-height: 100vh;
 }
 .form-container {
-  background-color: #fff;
+        background: #fff;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+ box-shadow: 0 2px 16px rgba(0,0,0,0.08);
   max-width: 620px;
   width: 100%;
 }
@@ -91,8 +86,8 @@ select {
 }
 
 .btn-submit {
-  background-color: #004e5f;
-  color: #fff;
+  background-color: #8DA3E9; /* Color azul-violeta claro del botón */
+  color: #fff; /* El color del texto sigue siendo blanco */
   border: none;
   padding: 12px 20px;
   border-radius: 6px;
@@ -100,10 +95,11 @@ select {
   font-size: 16px;
   margin-top: 10px;
   width: 100%;
+  transition: background-color 0.3s ease; /* Añadido para una transición suave al pasar el ratón */
 }
 
 .btn-submit:hover {
-  background-color: #00788a;
+  background-color: #748FE0; /* Un tono ligeramente más oscuro para el hover */
 }
 
 /* --- SECCIÓN CRÍTICA: ESTILOS PARA LA SUBIDA DE ARCHIVOS --- */
@@ -128,19 +124,21 @@ select {
     display: inline-block; /* Para que parezca un botón */
     margin-top: 10px;
     padding: 8px 16px;
-    background-color: #003f53; /* Tu color de botón */
-    color: white;
+    background-color: #8DA3E9; /* Color azul-violeta claro del botón "Ingresar" */
+    color: white; /* El color del texto sigue siendo blanco */
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease; /* Añadido para una transición suave al pasar el ratón */
     /* --- ¡IMPORTANTE! PARA POSICIONAR EL INPUT INTERNO --- */
     position: relative; /* Permite que el input type="file" (que va DENTRO) se posicione absolutamente */
-    overflow: hidden;   /* Oculta el input si se desborda (aunque lo haremos 100%) */
-    z-index: 0;         /* Asegura que el label esté "debajo" del input invisible */
+    overflow: hidden;    /* Oculta el input si se desborda (aunque lo haremos 100%) */
+    z-index: 0;          /* Asegura que el label esté "debajo" del input invisible */
 }
 
 .custom-file-label:hover {
-    background-color: #00566d;
+    background-color: #748FE0; /* Un tono ligeramente más oscuro para el hover, igual que el botón principal */
 }
+
 
 /* --- ¡ESTO ES LO MÁS CRÍTICO! OCULTA Y POSICIONA EL INPUT NATIVO --- */
 /* Esta regla aplica solo al input type="file" que está ANIDADO dentro de un .custom-file-label */
@@ -183,6 +181,7 @@ select {
 </head>
 <body>
   <div class="form-container">
+        <img src="{{ asset('imagenes/logo.png') }}" alt="Logo" style="display:block; margin:0 auto 20px auto; max-width:160px;">
     <h2>Solicitar Cita</h2>
     <form action="{{ route('solicitar-cita.guardar') }}" method="POST" enctype="multipart/form-data">   
     @csrf
