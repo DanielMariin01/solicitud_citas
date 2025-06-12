@@ -17,7 +17,11 @@ class ProcedimientoResource extends Resource
 {
     protected static ?string $model = Procedimiento::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
+      protected static ?string $navigationGroup = 'Administración';
+    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationLabel = 'Procedimientos';
+    protected static ?string $modelLabel = 'Gestión de Procedimientos ';
 
     public static function form(Form $form): Form
     {

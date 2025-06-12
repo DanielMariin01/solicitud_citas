@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Enums\SolicitudEstado;
+use App\Enums\SolicitudEstadoAgendamiento;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\BadgeColumn;
 
@@ -27,6 +28,7 @@ protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
       protected static ?string $navigationGroup = 'Agendamiento';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel = 'Agendamiento';
+    protected static ?string $modelLabel = 'Gestión de Agenda ';
 
 
     public static function form(Form $form): Form
@@ -35,7 +37,7 @@ protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
             ->schema([
                      Forms\Components\Select::make('estado')
                     ->label('Estado de Solicitud')
-                    ->options(SolicitudEstado::class)
+                    ->options(SolicitudEstadoAgendamiento::class)
                     ->required()
                     ->native(false)
             ]);
@@ -181,7 +183,9 @@ protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->label('Gestionar Solicitud') // Cambia el texto del botón
+                ->icon('heroicon-o-pencil-square'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

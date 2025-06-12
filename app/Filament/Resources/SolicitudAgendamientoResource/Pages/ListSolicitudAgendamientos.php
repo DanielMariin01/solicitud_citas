@@ -10,10 +10,5 @@ class ListSolicitudAgendamientos extends ListRecords
 {
     protected static string $resource = SolicitudAgendamientoResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-        ];
-    }
+
 }

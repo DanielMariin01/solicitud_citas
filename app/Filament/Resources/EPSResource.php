@@ -17,7 +17,11 @@ class EPSResource extends Resource
 {
     protected static ?string $model = EPS::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+  protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+      protected static ?string $navigationGroup = 'Administración';
+    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationLabel = 'EPS';
+    protected static ?string $modelLabel = 'Gestión de EPS ';
 
     public static function form(Form $form): Form
     {
