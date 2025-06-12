@@ -21,7 +21,7 @@ body {
   min-height: 100vh;
 }
 .form-container {
-        background: #fff;
+        background: #FFFFFF;
   padding: 30px;
   border-radius: 10px;
  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
