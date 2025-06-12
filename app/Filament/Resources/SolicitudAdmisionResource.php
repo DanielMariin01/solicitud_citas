@@ -33,7 +33,15 @@ class SolicitudAdmisionResource extends Resource
     protected static ?string $navigationLabel = 'Respuesta Solicitudes';
      protected static ?string $modelLabel = 'Historial de solicitudes';
    
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning'; // Otro color para diferenciarlos
+    }
 
     public static function form(Form $form): Form
     {

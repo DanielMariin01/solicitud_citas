@@ -27,6 +27,18 @@ class PacienteResource extends Resource
     protected static ?string $navigationLabel = 'Solicitudes Admisiones';
     protected static ?string $pluralModelLabel = 'Gestión de Solicitudes'; 
 
+     public static function getNavigationBadge(): ?string
+    {
+        // Esto reflejará el conteo de registros visibles bajo el scope getEloquentQuery()
+        return static::getEloquentQuery()->count();
+    }
+
+    // Color del contador: NARANJA
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning'; // Cambiado a 'warning' para el color naranja
+    }
+
     public static function form(Form $form): Form
     {
         return $form
