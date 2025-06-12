@@ -14,8 +14,10 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Enums\SolicitudEstado;
+use App\Enums\SolicitudEstadoMedico;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\BadgeColumn;
+
 
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Paciente;
@@ -28,7 +30,8 @@ class SolicitudMedicoResource extends Resource
       protected static ?string $navigationIcon = 'heroicon-o-user-circle';
       protected static ?string $navigationGroup = 'Solicitudes';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationLabel = 'Solicitudes Medico';
+    protected static ?string $navigationLabel = 'Solicitudes Médico';
+    protected static ?string $modelLabel = 'Gestión de Solicitudes';
 
 
     public static function form(Form $form): Form
@@ -37,9 +40,24 @@ class SolicitudMedicoResource extends Resource
             ->schema([
                       Forms\Components\Select::make('estado')
                     ->label('Estado de Solicitud')
-                    ->options(SolicitudEstado::class)
+                    ->options(SolicitudEstadoMedico::class)
                     ->required()
-                    ->native(false)
+                    ->native(false),
+
+                     Forms\Components\TextInput::make('comentario')
+                    ->label('Comentario')
+                    ->maxLength(1000)
+                    // Elimina ->dehydrateStateUsing(fn (string $state) => null)
+                    // Elimina ->default(null)
+                    // Elimina ->fillFromModel(false)
+
+                    // Esta es la forma correcta de hacer que el campo esté vacío al cargar
+                    ->afterStateHydrated(function (Forms\Components\TextInput $component, ?string $state) {
+                        // Siempre establece el estado del componente a null (vacío)
+                        // al hidratarse, ignorando el valor que venga del modelo.
+                        $component->state(null);
+                    })
+
             ]);
     }
 
@@ -184,7 +202,9 @@ class SolicitudMedicoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->label('Gestionar Solicitud') // Cambia el texto del botón
+                ->icon('heroicon-o-pencil-square'),
                  // Tables\Actions\Action::make('Responder')
                     //->url(fn (Solicitud_Medico $record): string => SolicitudAdmisionResource::getUrl('create', [
     //'fk_paciente' => $record->paciente->id_paciente, // o $record->paciente_id dependiendo de cómo esté definido

@@ -15,8 +15,9 @@ use App\Models\Solicitud_Admision;
 use App\Enums\SolicitudEstado;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\BadgeColumn;
-
+use App\Models\Paciente;
 use Illuminate\Support\Facades\Crypt;
+
 
 
 
@@ -30,7 +31,7 @@ class SolicitudAdmisionResource extends Resource
       protected static ?string $navigationGroup = 'Respuesta Solicitudes';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel = 'Respuesta Solicitudes';
-     protected static ?string $modelLabel = 'Responder Solicitud';
+     protected static ?string $modelLabel = 'Historial de solicitudes';
    
 
 
@@ -217,6 +218,8 @@ class SolicitudAdmisionResource extends Resource
           
             
             ])
+            ->defaultPaginationPageOption(10)
+            ->paginationPageOptions([10, 25, 50, 100])
             ->filters([
                  Tables\Filters\SelectFilter::make('estado')
                     ->label('Estado')
@@ -228,6 +231,67 @@ class SolicitudAdmisionResource extends Resource
                         \App\Enums\SolicitudEstado::FINALIZADA->value => 'Finalizada',
                     ])
                     ->searchable(),
+                   Tables\Filters\SelectFilter::make('id_eps')
+                    ->label('EPS')
+                  ->relationship('eps', 'nombre'),
+           Tables\Filters\SelectFilter::make('paciente.numero_identificacion')
+                    ->label('Número de Identificación')
+                    ->placeholder('Buscar o seleccionar número')
+                    // Deshabilitamos la carga inicial de todas las opciones.
+                    // Las opciones se cargarán dinámicamente con getSearchResultsUsing().
+                    ->options(function (): array {
+                        // Devolvemos un array vacío al inicio, las opciones se llenarán con la búsqueda.
+                        // Si quieres que el valor actualmente seleccionado aparezca, podrías cargar solo ese.
+                        return [];
+                    })
+                    ->searchable() // Habilita la barra de búsqueda dentro del select
+                    ->getSearchResultsUsing(function (string $search): array {
+                        if (empty($search)) {
+                            return []; // No mostrar resultados si no hay búsqueda
+                        }
+
+                        // **¡Advertencia de Rendimiento: Todavía desencripta en PHP!**
+                        // Esta búsqueda es sobre una colección de Pacientes, no a nivel de DB directamente en el cifrado.
+                        // Limita los resultados para evitar sobrecargar.
+                        $results = Paciente::all() // O Paciente::limit(200)->get() para limitar la carga inicial
+                            ->filter(function (Paciente $paciente) use ($search) {
+                                if (empty($paciente->numero_identificacion)) {
+                                    return false;
+                                }
+                                return str_contains(
+                                    strtolower(Crypt::decryptString($paciente->numero_identificacion)),
+                                    strtolower($search)
+                                );
+                            })
+                            ->take(50) // Limitar el número de resultados mostrados en el desplegable
+                            ->mapWithKeys(function ($paciente) {
+                                return [$paciente->numero_identificacion => Crypt::decryptString($paciente->numero_identificacion)];
+                            })
+                            ->toArray();
+
+                        return $results;
+                    })
+                    ->getOptionLabelUsing(function (?string $value): string {
+                        // Esto es importante para que el valor seleccionado en el filtro se muestre desencriptado.
+                        // El $value aquí es el valor cifrado que se seleccionó del desplegable.
+                        if ($value) {
+                            return Crypt::decryptString($value);
+                        }
+                        return '';
+                    })
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (empty($data['value'])) {
+                            return $query; // Si no se selecciona nada, no se filtra
+                        }
+
+                        // El $data['value'] aquí es el valor CIFRADO del ID seleccionado.
+                        $selectedEncryptedId = $data['value'];
+
+                        // Filtra las solicitudes_medico donde el paciente tenga el ID cifrado seleccionado
+                        return $query->whereHas('paciente', function (Builder $pacienteQuery) use ($selectedEncryptedId) {
+                            $pacienteQuery->where('numero_identificacion', $selectedEncryptedId);
+                        });
+                    }),
                 //
             ])
             ->actions([

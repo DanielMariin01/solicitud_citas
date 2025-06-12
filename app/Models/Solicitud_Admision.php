@@ -25,6 +25,9 @@ class Solicitud_Admision extends Model
     {
         return $this->belongsTo(Paciente::class, 'fk_paciente', 'id_paciente');
     }
-
+    public function eps()
+    {
+        return $this->belongsTo(EPS::class, 'fk_eps', 'id_eps');
+    }
     
 }

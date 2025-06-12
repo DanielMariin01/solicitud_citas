@@ -10,10 +10,9 @@ class ListSolicitudAdmisions extends ListRecords
 {
     protected static string $resource = SolicitudAdmisionResource::class;
 
-    protected function getHeaderActions(): array
+      protected function getHeaderActions(): array
     {
-        return [
-            Actions\CreateAction::make(),
-        ];
+        // Devuelve un array vacío para eliminar el botón de creación
+        return [];
     }
 }
