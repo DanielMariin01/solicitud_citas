@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SolicitudConfirmacionMail;
 use App\Models\Ciudad;
 use App\Models\EPS;
 use App\Models\Paciente;
 use App\Models\Procedimiento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SolicitudConfirmationMail;
 class FormularioCitaController extends Controller
 {
 public function mostrarFormulario()
@@ -68,7 +71,30 @@ public function guardar(Request $request)
 
     $solicitud->save();
 
-    return redirect()->back()->with('success', '¡Tu solicitud fue enviada correctamente!');
+   // return redirect()->back()->with('success', '¡Tu solicitud fue enviada correctamente!');
+
+   // $recipientEmail = Crypt::decryptString($solicitud->correo); // Desencriptar el correo
+        //Log::info('Correo del paciente para envío de confirmación de solicitud desde controlador: ' . ($recipientEmail ?: 'NULL o Vacío'));
+ if ($solicitud && $solicitud->id_paciente) { // Verificamos que $paciente no sea null y tenga ID
+            $recipientEmail = Crypt::decryptString($solicitud->correo);
+
+            if ($recipientEmail && filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
+                try {
+                    Mail::mailer('smtp')->to($recipientEmail)->send(new SolicitudConfirmacionMail($solicitud));
+                    Log::info('Correo de confirmación de SOLICITUD enviado exitosamente a: ' . $recipientEmail . ' (desde FormularioCitaController)');
+                } catch (\Exception $e) {
+                    Log::error('ERROR al enviar correo de confirmación de SOLICITUD para paciente ID: ' . $solicitud->id_paciente . '. Error: ' . $e->getMessage());
+                    Log::error('Stack Trace del error de correo (FormularioCitaController): ' . $e->getTraceAsString());
+                }
+            } else {
+                Log::warning('No se pudo enviar correo de confirmación de SOLICITUD: Correo del paciente no válido o no encontrado para paciente ID: ' . $solicitud->id_paciente);
+            }
+        } else {
+            Log::error('No se pudo enviar correo: Paciente no creado o sin ID después de intentar guardar.');
+        }
+
+return redirect()->back()->with('success', '¡Tu solicitud fue enviada correctamente!');
+
 }
 
     

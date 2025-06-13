@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'log'),
+    'default' => env('MAIL_MAILER', 'smtp'),
 
     /*
     |--------------------------------------------------------------------------
@@ -34,19 +34,18 @@ return [
     |
     */
 
-    'mailers' => [
-
-        'smtp' => [
-            'transport' => 'smtp',
-            'url' => env('MAIL_URL'),
-            'host' => env('MAIL_HOST', '127.0.0.1'),
-            'port' => env('MAIL_PORT', 2525),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
-            'timeout' => null,
-            'local_domain' => env('MAIL_EHLO_DOMAIN'),
-        ],
+'mailers' => [
+    'smtp' => [ // Este es el bloque que Laravel usará
+        'transport' => 'smtp',
+        'url' => env('MAIL_URL'),
+        'host' => env('MAIL_HOST', '127.0.0.1'), // Tomará smtp.mailgun.org de tu .env
+        'port' => env('MAIL_PORT', 2525), // Tomará 587 de tu .env
+        'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+        'username' => env('MAIL_USERNAME'), // Tomará tu usuario SMTP de .env
+        'password' => env('MAIL_PASSWORD'), // Tomará tu clave API de .env
+        'timeout' => null,
+        'local_domain' => env('MAIL_EHLO_DOMAIN'),
+    ],
 
         'ses' => [
             'transport' => 'ses',
@@ -81,6 +80,7 @@ return [
                 'log',
             ],
         ],
+         
 
     ],
 
