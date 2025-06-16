@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Agendar\Resources;
 
-use App\Filament\Resources\SolicitudMedicoResource\Pages;
-use App\Filament\Resources\SolicitudMedicoResource\RelationManagers;
-use App\Models\Solicitud_Medico;
-use App\Models\SolicitudMedico;
+use App\Filament\Agendar\Resources\SolicitudAgendamientoResource\Pages;
+use App\Filament\Agendar\Resources\SolicitudAgendamientoResource\RelationManagers;
+use App\Models\SolicitudAgendamiento;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,25 +12,23 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\Solicitud_agendamiento;
 use App\Enums\SolicitudEstado;
-use App\Enums\SolicitudEstadoMedico;
-use Filament\Forms\Components\Select;
+use App\Enums\SolicitudEstadoAgendamiento;
 use Filament\Tables\Columns\BadgeColumn;
 
-
 use Illuminate\Support\Facades\Crypt;
-use App\Models\Paciente;
 
 
-class SolicitudMedicoResource extends Resource
+class SolicitudAgendamientoResource extends Resource
 {
-    protected static ?string $model = Solicitud_Medico::class;
+    protected static ?string $model = Solicitud_Agendamiento::class;
 
-      protected static ?string $navigationIcon = 'heroicon-o-user-circle';
-      protected static ?string $navigationGroup = 'Solicitudes';
+protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+      protected static ?string $navigationGroup = 'Agendamiento';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationLabel = 'Solicitudes Médico';
-    protected static ?string $modelLabel = 'Gestión de Solicitudes';
+    protected static ?string $navigationLabel = 'Agendamiento';
+    protected static ?string $modelLabel = 'Gestión de Agenda ';
 
 
      public static function getNavigationBadge(): ?string
@@ -50,28 +47,11 @@ class SolicitudMedicoResource extends Resource
     {
         return $form
             ->schema([
-                      Forms\Components\Select::make('estado')
+                Forms\Components\Select::make('estado')
                     ->label('Estado de Solicitud')
-                    ->options(SolicitudEstadoMedico::class)
+                    ->options(SolicitudEstadoAgendamiento::class)
                     ->required()
-                    ->native(false),
-                    
-
-                     Forms\Components\TextInput::make('comentario')
-                    ->label('Observación')
-                    ->maxLength(1000)
-                    ->required()
-                    // Elimina ->dehydrateStateUsing(fn (string $state) => null)
-                    // Elimina ->default(null)
-                    // Elimina ->fillFromModel(false)
-
-                    // Esta es la forma correcta de hacer que el campo esté vacío al cargar
-                    ->afterStateHydrated(function (Forms\Components\TextInput $component, ?string $state) {
-                        // Siempre establece el estado del componente a null (vacío)
-                        // al hidratarse, ignorando el valor que venga del modelo.
-                        $component->state(null);
-                    })
-
+                    ->native(false)
             ]);
     }
 
@@ -209,8 +189,6 @@ class SolicitudMedicoResource extends Resource
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Fecha de Actualización')
                     ->dateTime('d/m/Y H:i:s'),
-       
-    
             ])
               ->defaultPaginationPageOption(10)
             ->paginationPageOptions([10, 25, 50, 100])
@@ -218,22 +196,15 @@ class SolicitudMedicoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                  Tables\Actions\EditAction::make()
                 ->label('Gestionar Solicitud') // Cambia el texto del botón
                 ->icon('heroicon-o-pencil-square'),
-                 // Tables\Actions\Action::make('Responder')
-                    //->url(fn (Solicitud_Medico $record): string => SolicitudAdmisionResource::getUrl('create', [
-    //'fk_paciente' => $record->paciente->id_paciente, // o $record->paciente_id dependiendo de cómo esté definido
-//]//))
-                    //->icon('heroicon-o-chat-bubble-left-right')
-                    //->color('primary'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->defaultSort('created_at', 'asc');
+            ]);
     }
 
     public static function getRelations(): array
@@ -246,16 +217,15 @@ class SolicitudMedicoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSolicitudMedicos::route('/'),
-            'create' => Pages\CreateSolicitudMedico::route('/create'),
-            //'edit' => Pages\EditSolicitudMedico::route('/{record}/edit'),
+            'index' => Pages\ListSolicitudAgendamientos::route('/'),
+            'create' => Pages\CreateSolicitudAgendamiento::route('/create'),
+            //'edit' => Pages\EditSolicitudAgendamiento::route('/{record}/edit'),
         ];
     }
-
-          public static function getEloquentQuery(): Builder
+             public static function getEloquentQuery(): Builder
     {
         // Esto filtrará la tabla para que solo muestre registros donde 'estado' sea 'aprobada'.
         // Los usuarios no podrán cambiar este filtro desde la UI.
-        return parent::getEloquentQuery()->where('estado', 'enviada_a_medico');
+        return parent::getEloquentQuery()->where('estado', 'agendar');
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\AdminMedico\Resources;
 
-use App\Filament\Resources\SolicitudMedicoResource\Pages;
-use App\Filament\Resources\SolicitudMedicoResource\RelationManagers;
-use App\Models\Solicitud_Medico;
-use App\Models\SolicitudMedico;
+use App\Filament\AdminMedico\Resources\SolicitudAdmisionResource\Pages;
+use App\Filament\AdminMedico\Resources\SolicitudAdmisionResource\RelationManagers;
+use App\Models\Solicitud_Admision;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,65 +12,62 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Enums\SolicitudEstado;
-use App\Enums\SolicitudEstadoMedico;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\BadgeColumn;
-
-
 use Illuminate\Support\Facades\Crypt;
+use App\Enums\SolicitudEstado;
 use App\Models\Paciente;
 
 
-class SolicitudMedicoResource extends Resource
+class SolicitudAdmisionResource extends Resource
 {
-    protected static ?string $model = Solicitud_Medico::class;
+    protected static ?string $model = Solicitud_Admision::class;
 
-      protected static ?string $navigationIcon = 'heroicon-o-user-circle';
-      protected static ?string $navigationGroup = 'Solicitudes';
+
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
+      protected static ?string $navigationGroup = 'Respuesta Solicitudes';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationLabel = 'Solicitudes Médico';
-    protected static ?string $modelLabel = 'Gestión de Solicitudes';
-
-
-     public static function getNavigationBadge(): ?string
+    protected static ?string $navigationLabel = 'Respuesta Solicitudes';
+     protected static ?string $modelLabel = 'Historial de solicitudes';
+         public static function getNavigationBadge(): ?string
     {
-        // Esto reflejará el conteo de registros visibles bajo el scope getEloquentQuery()
-        return static::getEloquentQuery()->count();
+        return static::getModel()::count();
     }
 
-    // Color del contador: NARANJA
     public static function getNavigationBadgeColor(): ?string
     {
-        return 'warning'; // Cambiado a 'warning' para el color naranja
+        return 'warning'; // Otro color para diferenciarlos
     }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                      Forms\Components\Select::make('estado')
-                    ->label('Estado de Solicitud')
-                    ->options(SolicitudEstadoMedico::class)
-                    ->required()
-                    ->native(false),
+                 Forms\Components\Select::make('estado')
+                ->required()
+                ->options([
+                
+                    'enviada_a_medico' => 'Enviada_a_Medico',
+                    'agendar' => 'Agendar', // <-- Asegúrate que esta clave sea 'agendar' (string)
+                    'cancelada' => 'Cancelada',
+               
+                ])
+                ->native(false),
                     
+                Forms\Components\TextInput::make('comentario')
+                    ->label('Comentario')
+                    ->maxLength(1000),
 
-                     Forms\Components\TextInput::make('comentario')
-                    ->label('Observación')
-                    ->maxLength(1000)
-                    ->required()
-                    // Elimina ->dehydrateStateUsing(fn (string $state) => null)
-                    // Elimina ->default(null)
-                    // Elimina ->fillFromModel(false)
-
-                    // Esta es la forma correcta de hacer que el campo esté vacío al cargar
-                    ->afterStateHydrated(function (Forms\Components\TextInput $component, ?string $state) {
-                        // Siempre establece el estado del componente a null (vacío)
-                        // al hidratarse, ignorando el valor que venga del modelo.
-                        $component->state(null);
-                    })
-
+                
+                 Select::make('fk_paciente') // Usa Select si quieres que sea un desplegable de pacientes
+                    ->label('Paciente Asociado') // Etiqueta para el formulario
+                    ->relationship('paciente', 'nombre') // 'paciente' es el método de relación en tu modelo SolicitudAdmisiones
+                                                                  // 'nombre_completo' es la columna que quieres mostrar en el desplegable
+                                                                  // (si no tienes 'nombre_completo', usa 'nombre' o el campo que identifique al paciente)
+                    ->required() // Si es un campo obligatorio
+                    ->default(fn () => request()->query('fk_paciente')) // <-- ¡AQUÍ SE PRE-RELLENA DESDE LA URL!
+                    ->disabled() // Hace que el campo sea visible pero no editable por el usuario
+                    ->dehydrated(true)
             ]);
     }
 
@@ -79,7 +75,7 @@ class SolicitudMedicoResource extends Resource
     {
         return $table
             ->columns([
-                 Tables\Columns\TextColumn::make('id_solicitud_admision')
+                Tables\Columns\TextColumn::make('id_solicitud_admision')
                     ->label('ID Solicitud')
                     ->sortable()
                     ->searchable(),
@@ -211,29 +207,92 @@ class SolicitudMedicoResource extends Resource
                     ->dateTime('d/m/Y H:i:s'),
        
     
+          
             ])
-              ->defaultPaginationPageOption(10)
+             ->defaultPaginationPageOption(10)
             ->paginationPageOptions([10, 25, 50, 100])
             ->filters([
+                 Tables\Filters\SelectFilter::make('estado')
+                    ->label('Estado')
+                    ->options([
+                        \App\Enums\SolicitudEstado::PENDIENTE->value => 'Pendiente',
+                        \App\Enums\SolicitudEstado::AGENDAR->value => 'agendar',
+                        \App\Enums\SolicitudEstado::CANCELADA->value => 'Cancelada',
+                        \App\Enums\SolicitudEstado::ENVIADA_A_MEDICO->value => 'Enviada a Médico',
+                        \App\Enums\SolicitudEstado::FINALIZADA->value => 'Finalizada',
+                    ])
+                    ->searchable(),
+                   Tables\Filters\SelectFilter::make('id_eps')
+                    ->label('EPS')
+                  ->relationship('eps', 'nombre'),
+           Tables\Filters\SelectFilter::make('paciente.numero_identificacion')
+                    ->label('Número de Identificación')
+                    ->placeholder('Buscar o seleccionar número')
+                    // Deshabilitamos la carga inicial de todas las opciones.
+                    // Las opciones se cargarán dinámicamente con getSearchResultsUsing().
+                    ->options(function (): array {
+                        // Devolvemos un array vacío al inicio, las opciones se llenarán con la búsqueda.
+                        // Si quieres que el valor actualmente seleccionado aparezca, podrías cargar solo ese.
+                        return [];
+                    })
+                    ->searchable() // Habilita la barra de búsqueda dentro del select
+                    ->getSearchResultsUsing(function (string $search): array {
+                        if (empty($search)) {
+                            return []; // No mostrar resultados si no hay búsqueda
+                        }
+
+                        // **¡Advertencia de Rendimiento: Todavía desencripta en PHP!**
+                        // Esta búsqueda es sobre una colección de Pacientes, no a nivel de DB directamente en el cifrado.
+                        // Limita los resultados para evitar sobrecargar.
+                        $results = Paciente::all() // O Paciente::limit(200)->get() para limitar la carga inicial
+                            ->filter(function (Paciente $paciente) use ($search) {
+                                if (empty($paciente->numero_identificacion)) {
+                                    return false;
+                                }
+                                return str_contains(
+                                    strtolower(Crypt::decryptString($paciente->numero_identificacion)),
+                                    strtolower($search)
+                                );
+                            })
+                            ->take(50) // Limitar el número de resultados mostrados en el desplegable
+                            ->mapWithKeys(function ($paciente) {
+                                return [$paciente->numero_identificacion => Crypt::decryptString($paciente->numero_identificacion)];
+                            })
+                            ->toArray();
+
+                        return $results;
+                    })
+                    ->getOptionLabelUsing(function (?string $value): string {
+                        // Esto es importante para que el valor seleccionado en el filtro se muestre desencriptado.
+                        // El $value aquí es el valor cifrado que se seleccionó del desplegable.
+                        if ($value) {
+                            return Crypt::decryptString($value);
+                        }
+                        return '';
+                    })
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (empty($data['value'])) {
+                            return $query; // Si no se selecciona nada, no se filtra
+                        }
+
+                        // El $data['value'] aquí es el valor CIFRADO del ID seleccionado.
+                        $selectedEncryptedId = $data['value'];
+
+                        // Filtra las solicitudes_medico donde el paciente tenga el ID cifrado seleccionado
+                        return $query->whereHas('paciente', function (Builder $pacienteQuery) use ($selectedEncryptedId) {
+                            $pacienteQuery->where('numero_identificacion', $selectedEncryptedId);
+                        });
+                    }),
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                ->label('Gestionar Solicitud') // Cambia el texto del botón
-                ->icon('heroicon-o-pencil-square'),
-                 // Tables\Actions\Action::make('Responder')
-                    //->url(fn (Solicitud_Medico $record): string => SolicitudAdmisionResource::getUrl('create', [
-    //'fk_paciente' => $record->paciente->id_paciente, // o $record->paciente_id dependiendo de cómo esté definido
-//]//))
-                    //->icon('heroicon-o-chat-bubble-left-right')
-                    //->color('primary'),
+                //Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->defaultSort('created_at', 'asc');
+            ]);
     }
 
     public static function getRelations(): array
@@ -246,16 +305,9 @@ class SolicitudMedicoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSolicitudMedicos::route('/'),
-            'create' => Pages\CreateSolicitudMedico::route('/create'),
-            //'edit' => Pages\EditSolicitudMedico::route('/{record}/edit'),
+            'index' => Pages\ListSolicitudAdmisions::route('/'),
+            'create' => Pages\CreateSolicitudAdmision::route('/create'),
+            //'edit' => Pages\EditSolicitudAdmision::route('/{record}/edit'),
         ];
-    }
-
-          public static function getEloquentQuery(): Builder
-    {
-        // Esto filtrará la tabla para que solo muestre registros donde 'estado' sea 'aprobada'.
-        // Los usuarios no podrán cambiar este filtro desde la UI.
-        return parent::getEloquentQuery()->where('estado', 'enviada_a_medico');
     }
 }

@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\AdminMedico\Resources;
 
-use App\Filament\Resources\SolicitudMedicoResource\Pages;
-use App\Filament\Resources\SolicitudMedicoResource\RelationManagers;
-use App\Models\Solicitud_Medico;
+use App\Filament\AdminMedico\Resources\SolicitudMedicoResource\Pages;
+use App\Filament\AdminMedico\Resources\SolicitudMedicoResource\RelationManagers;
 use App\Models\SolicitudMedico;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,27 +12,24 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\Solicitud_Medico;
 use App\Enums\SolicitudEstado;
 use App\Enums\SolicitudEstadoMedico;
-use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\BadgeColumn;
-
-
 use Illuminate\Support\Facades\Crypt;
-use App\Models\Paciente;
-
 
 class SolicitudMedicoResource extends Resource
 {
     protected static ?string $model = Solicitud_Medico::class;
 
+   
       protected static ?string $navigationIcon = 'heroicon-o-user-circle';
       protected static ?string $navigationGroup = 'Solicitudes';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel = 'Solicitudes Médico';
     protected static ?string $modelLabel = 'Gestión de Solicitudes';
 
-
+    
      public static function getNavigationBadge(): ?string
     {
         // Esto reflejará el conteo de registros visibles bajo el scope getEloquentQuery()
@@ -50,7 +46,7 @@ class SolicitudMedicoResource extends Resource
     {
         return $form
             ->schema([
-                      Forms\Components\Select::make('estado')
+                   Forms\Components\Select::make('estado')
                     ->label('Estado de Solicitud')
                     ->options(SolicitudEstadoMedico::class)
                     ->required()
@@ -71,7 +67,6 @@ class SolicitudMedicoResource extends Resource
                         // al hidratarse, ignorando el valor que venga del modelo.
                         $component->state(null);
                     })
-
             ]);
     }
 
@@ -79,7 +74,7 @@ class SolicitudMedicoResource extends Resource
     {
         return $table
             ->columns([
-                 Tables\Columns\TextColumn::make('id_solicitud_admision')
+                Tables\Columns\TextColumn::make('id_solicitud_admision')
                     ->label('ID Solicitud')
                     ->sortable()
                     ->searchable(),
@@ -210,23 +205,17 @@ class SolicitudMedicoResource extends Resource
                     ->label('Fecha de Actualización')
                     ->dateTime('d/m/Y H:i:s'),
        
-    
             ])
-              ->defaultPaginationPageOption(10)
+             ->defaultPaginationPageOption(10)
             ->paginationPageOptions([10, 25, 50, 100])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+             
+                  Tables\Actions\EditAction::make()
                 ->label('Gestionar Solicitud') // Cambia el texto del botón
                 ->icon('heroicon-o-pencil-square'),
-                 // Tables\Actions\Action::make('Responder')
-                    //->url(fn (Solicitud_Medico $record): string => SolicitudAdmisionResource::getUrl('create', [
-    //'fk_paciente' => $record->paciente->id_paciente, // o $record->paciente_id dependiendo de cómo esté definido
-//]//))
-                    //->icon('heroicon-o-chat-bubble-left-right')
-                    //->color('primary'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -251,8 +240,7 @@ class SolicitudMedicoResource extends Resource
             //'edit' => Pages\EditSolicitudMedico::route('/{record}/edit'),
         ];
     }
-
-          public static function getEloquentQuery(): Builder
+              public static function getEloquentQuery(): Builder
     {
         // Esto filtrará la tabla para que solo muestre registros donde 'estado' sea 'aprobada'.
         // Los usuarios no podrán cambiar este filtro desde la UI.
