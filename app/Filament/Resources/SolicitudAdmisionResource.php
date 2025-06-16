@@ -242,6 +242,8 @@ class SolicitudAdmisionResource extends Resource
                    Tables\Filters\SelectFilter::make('id_eps')
                     ->label('EPS')
                   ->relationship('eps', 'nombre'),
+
+                  
            Tables\Filters\SelectFilter::make('paciente.numero_identificacion')
                     ->label('Número de Identificación')
                     ->placeholder('Buscar o seleccionar número')

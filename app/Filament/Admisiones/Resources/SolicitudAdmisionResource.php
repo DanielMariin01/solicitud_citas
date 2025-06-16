@@ -60,7 +60,8 @@ class SolicitudAdmisionResource extends Resource
                     
                 Forms\Components\TextInput::make('comentario')
                     ->label('Comentario')
-                    ->maxLength(1000),
+                    ->maxLength(1000)
+                    ->required(),
 
                 
                  Select::make('fk_paciente') // Usa Select si quieres que sea un desplegable de pacientes

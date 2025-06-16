@@ -216,6 +216,8 @@ class SolicitudMedicoResource extends Resource
                   Tables\Actions\EditAction::make()
                 ->label('Gestionar Solicitud') // Cambia el texto del botón
                 ->icon('heroicon-o-pencil-square'),
+
+                
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -10,5 +10,5 @@ class ListSolicitudAdmisions extends ListRecords
 {
     protected static string $resource = SolicitudAdmisionResource::class;
 
-
+     
 }
