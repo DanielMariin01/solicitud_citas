@@ -16,4 +16,6 @@ class EditSolicitudAdmision extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    
 }

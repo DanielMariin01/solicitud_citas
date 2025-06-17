@@ -75,4 +75,14 @@ class CreateSolicitudAdmision extends CreateRecord
         return PacienteResource::getUrl('index');
     }
 
+
+     protected function afterSave(): void
+    {
+        
+
+
+
+        
+    }
+
 }
