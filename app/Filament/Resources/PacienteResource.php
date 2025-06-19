@@ -80,7 +80,7 @@ class PacienteResource extends Resource
                     ->searchable()
                     ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
 
-                Tables\Columns\TextColumn::make('correo')
+                     Tables\Columns\TextColumn::make('correo')
                     ->label('Correo Electrónico')
                     ->sortable()
                     ->searchable()
