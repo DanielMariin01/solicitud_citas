@@ -151,7 +151,7 @@
                             <p>Por favor, revisa el nuevo estado. Si tienes alguna pregunta, no dudes en contactarnos.</p>
 
                             <p>Gracias por confiar en nosotros,</p>
-                            <p style="margin-bottom: 0;">{{ config('app.name') }}</p>
+                        
                         </td>
                     </tr>
                 </table>
