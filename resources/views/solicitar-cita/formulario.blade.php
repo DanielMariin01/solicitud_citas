@@ -236,7 +236,7 @@ select {
       </div>
 
   <div class="form-group half">
-    <label for="" class="form-label">Numero de documento</label>
+    <label for="" class="form-label">Número de documento</label>
     <input 
         type="text" 
         name="numero_identificacion" 
@@ -314,9 +314,7 @@ select {
     @error('id_ciudad')
         <div class="invalid-feedback">{{ $message }}</div>
     @else
-        @if(old('id_ciudad'))
-            <div class="valid-feedback">¡Se ve bien!</div>
-        @endif
+       
     @enderror
 </div>
  
@@ -339,9 +337,7 @@ select {
     @error('id_eps')
         <div class="invalid-feedback">{{ $message }}</div>
     @else
-        @if(old('id_eps'))
-            <div class="valid-feedback">¡Se ve bien!</div>
-        @endif
+      
     @enderror
 </div>
 
@@ -364,13 +360,13 @@ select {
     @enderror
 </div>
 <div class="form-group">
-    <label for="observacion" class="form-label">Observacion</label>
+    <label for="observacion" class="form-label">Observación</label>
     <textarea 
         name="observacion" 
         id="observacion" 
         rows="4"
         placeholder="Ingrese aquí comentarios adicionales"
-        class="form-control @error('observacion') is-invalid @else @if(old('observacion')) is-valid @endif @enderror" required
+        class="form-control @error('observacion') is-invalid @else @if(old('observacion')) is-valid @endif @enderror"
     >{{ old('observacion') }}</textarea>
     @error('observacion')
         <div class="invalid-feedback">{{ $message }}</div>

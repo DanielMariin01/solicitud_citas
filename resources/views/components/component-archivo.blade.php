@@ -3,7 +3,7 @@
 
     <div class="upload-area" id="{{ $id }}-area">
         <p><strong>{{ $helpText }}</strong></p>
-        <p>Arrastra y suelta archivos aquí</p>
+     
 
         {{-- Este es el botón VISIBLE y ESTILIZADO --}}
         {{-- ¡El input DEBE IR DENTRO DE ESTE LABEL! --}}

@@ -145,6 +145,7 @@
                     
         
                                 <li><strong>Estado Actual:</strong> **{{ $estado ?? 'Desconocido' }}**</li>
+                                
                   
                             </ul>
 

@@ -42,7 +42,7 @@ class AdminMedicoPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/AdminMedico/Widgets'), for: 'App\\Filament\\AdminMedico\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+        
             ])
             ->middleware([
                 EncryptCookies::class,
