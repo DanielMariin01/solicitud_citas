@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Especialidad; 
 
 class Procedimiento extends Model
 {
@@ -16,5 +17,8 @@ class Procedimiento extends Model
     ];
     // Relación con Paciente
    
-
+  public function especialidad()
+    {
+        return $this->belongsTo(Especialidad::class, 'fk_especialidad');
+    }
 }

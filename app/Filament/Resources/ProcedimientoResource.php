@@ -27,14 +27,14 @@ protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
     {
         return $form
             ->schema([
+
+                  Forms\Components\Select::make('fk_especialidad')
+                ->label('Especialidad')
+                ->relationship('especialidad', 'nombre')
+                ->nullable(),
              
-                Forms\Components\TextInput::make('codigo')
+                 Forms\Components\TextInput::make('nombre')
                     ->required()
-                    ->maxLength(50)
-                    ->label('Código del Procedimiento'),
-                        Forms\Components\TextInput::make('nombre')
-                    ->required()
-                    ->maxLength(255)
                     ->label('Nombre del Procedimiento'),
             
             ])->columns(2);
@@ -45,11 +45,13 @@ protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
     {
         return $table
             ->columns([
+                 
+           
+                Tables\Columns\TextColumn::make('especialidad.nombre')
+                    ->label('Especialidad')
+                    ->searchable()
+                    ->sortable(),
 
-                Tables\Columns\TextColumn::make('codigo')
-                    ->label('Código')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('nombre')
                     ->label('Nombre del Procedimiento')
                     ->searchable()
@@ -64,7 +66,10 @@ protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
             ->defaultPaginationPageOption(20)
             ->paginationPageOptions([10, 50, 100, 200])
             ->filters([
-                //filtro por codigo
+                  Tables\Filters\SelectFilter::make('fk_especialidad')
+                ->label('Especialidad')
+                ->relationship('especialidad', 'nombre')
+                ->placeholder('Todas las especialidades'),
               
                              
             ])
