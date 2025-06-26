@@ -438,6 +438,7 @@ select {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+        const URL_BUSCAR_PROCEDIMIENTOS = "{{ route('api.procedimientos.buscar') }}";
     // Este es un ÚNICO bloque que se ejecuta cuando el DOM está listo.
     document.addEventListener('DOMContentLoaded', function() {
         
@@ -469,7 +470,7 @@ select {
             },
             // ¡Esta es la configuración AJAX que llama a tu controlador!
             ajax: {
-             url: '{{ route('api.procedimientos.buscar') }}',
+                url: URL_BUSCAR_PROCEDIMIENTOS,
                 dataType: 'json',
                 delay: 250, // Espera 250ms después de que el usuario deja de escribir
                 data: function(params) {
