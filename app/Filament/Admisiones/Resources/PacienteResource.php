@@ -106,11 +106,10 @@ class PacienteResource extends Resource
                     ->label('Celular')
                     ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
 
-                Tables\Columns\TextColumn::make('procedimiento')
+                Tables\Columns\TextColumn::make('procedimiento.nombre')
                     ->label('Procedimiento')
                     ->sortable()
                     ->searchable()
-                    ->formatStateUsing(fn ($state) => Crypt::decryptString($state))
                     ->extraHeaderAttributes([
                         'style' => 'min-width: 200px;', // Establece un ancho mínimo para el encabezado
                     ])

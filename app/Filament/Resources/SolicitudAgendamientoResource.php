@@ -83,6 +83,18 @@ protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
                     ->sortable()
                     ->searchable()
                     ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
+                    
+                 Tables\Columns\TextColumn::make('paciente.procedimiento.nombre')
+                    ->label('Procedimiento')
+                    ->limit(1000)
+                    ->extraHeaderAttributes([
+                        'style' => 'min-width: 200px;', // Establece un ancho mínimo para el encabezado
+                    ])
+                    ->extraAttributes([
+                        'class' => 'whitespace-normal', // Asegura que el texto se envuelva (aunque ->wrap() ya lo hace)
+                        'style' => 'max-width: 300px; word-break: break-word;', // Ayuda con palabras muy largas
+                    ]), 
+
                
                 Tables\Columns\TextColumn::make('paciente.historia_clinica') // <-- ¡Aquí usas la notación de punto!
                     ->label('Historia Clínica')
@@ -205,7 +217,8 @@ protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+                ->defaultSort('created_at', 'asc');
     }
 
     public static function getRelations(): array

@@ -197,7 +197,16 @@ class SolicitudAdmisionResource extends Resource
                     }),
 
 
-
+                 Tables\Columns\TextColumn::make('paciente.procedimiento.nombre')
+                    ->label('Procedimiento')
+                    ->limit(1000)
+                    ->extraHeaderAttributes([
+                        'style' => 'min-width: 200px;', // Establece un ancho mínimo para el encabezado
+                    ])
+                    ->extraAttributes([
+                        'class' => 'whitespace-normal', // Asegura que el texto se envuelva (aunque ->wrap() ya lo hace)
+                        'style' => 'max-width: 300px; word-break: break-word;', // Ayuda con palabras muy largas
+                    ]), 
 
 
                 
@@ -311,7 +320,8 @@ class SolicitudAdmisionResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+                ->defaultSort('created_at', 'asc');
     }
 
     public static function getRelations(): array

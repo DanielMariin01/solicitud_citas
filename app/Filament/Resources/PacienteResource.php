@@ -96,11 +96,10 @@ class PacienteResource extends Resource
                     ->label('Celular')
                     ->formatStateUsing(fn ($state) => Crypt::decryptString($state)),
 
-                Tables\Columns\TextColumn::make('procedimiento')
+                Tables\Columns\TextColumn::make('procedimiento.nombre')
                     ->label('Procedimiento')
                     ->sortable()
                     ->searchable()
-                    ->formatStateUsing(fn ($state) => Crypt::decryptString($state))
                     ->extraHeaderAttributes([
                         'style' => 'min-width: 200px;', // Establece un ancho mínimo para el encabezado
                     ])
@@ -199,7 +198,7 @@ class PacienteResource extends Resource
                 Tables\Columns\TextColumn::make('created_at') // Columna para mostrar la fecha de creación
                     ->label('Fecha de Creación')
                     ->sortable()
-                    ->dateTime(),
+                     ->dateTime('d/m/Y H:i:s'),
                 //Tables\Columns\TextColumn::make('updated_at')  // Columna para mostrar la fecha de última actualización
                    // ->label('Última Actualización')
                     //->sortable()
@@ -247,7 +246,7 @@ class PacienteResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-             ->defaultSort('created_at', 'desc');
+             ->defaultSort('created_at', 'asc');
     }
 
     public static function getRelations(): array
