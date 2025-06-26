@@ -341,24 +341,35 @@ select {
     @enderror
 </div>
 
-
 <div class="form-group">
-    <label for="procedimiento" class="form-label">Procedimiento</label>
-    <textarea 
-        name="procedimiento" 
-        id="procedimiento" 
-        rows="4"
-        placeholder="Ingrese aquí el codigo y el nombre del procedimiento"
-        class="form-control @error('procedimiento') is-invalid @else @if(old('procedimiento')) is-valid @endif @enderror" required
-    >{{ old('procedimiento') }}</textarea>
-    @error('procedimiento')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @else
-        @if(old('procedimiento'))
-            <div class="valid-feedback"></div>
+    <label for="id_procedimiento" class="form-label">Procedimiento</label>
+    {{-- Asegúrate de que el `id` y `name` sean correctos --}}
+    <select 
+        name="id_procedimiento" 
+        id="id_procedimiento" 
+        class="form-select @error('id_procedimiento') is-invalid @else @if(old('id_procedimiento')) is-valid @endif @enderror"
+        required
+    >
+        <option value="">Busque un procedimiento</option>
+        {{-- Esta parte es opcional pero útil si hay errores de validación. --}}
+        @if(old('id_procedimiento'))
+            @php
+                // Debes obtener el procedimiento de la base de datos para mostrarlo aquí.
+                $procedimientoOld = App\Models\Procedimiento::find(old('id_procedimiento'));
+            @endphp
+            @if($procedimientoOld)
+                <option value="{{ $procedimientoOld->id_procedimiento }}" selected>
+                    {{ $procedimientoOld->nombre }}
+                </option>
+            @endif
         @endif
+    </select>
+    @error('id_procedimiento')
+        <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
+
+
 <div class="form-group">
     <label for="observacion" class="form-label">Observación</label>
     <textarea 
@@ -424,35 +435,89 @@ select {
       <button type="submit" class="btn-submit">Solicitar Cita</button>
     </form>
   </div>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  <script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    // Este es un ÚNICO bloque que se ejecuta cuando el DOM está listo.
     document.addEventListener('DOMContentLoaded', function() {
-        // Seleccionamos todos los inputs de tipo 'file' que están dentro de un '.custom-file-label'
+        
+        // ================================================================
+        // 1. Inicialización de Select2 para selectores sin búsqueda AJAX
+        // ================================================================
+        // Asegúrate de que los IDs coincidan con tu HTML
+        $('#id_ciudad').select2();
+        $('#id_eps').select2();
+        $('#tipo_identificacion').select2(); // Si lo tienes
+
+        // ================================================================
+        // 2. Inicialización de Select2 con búsqueda remota (AJAX) para PROCEDIMIENTOS
+        // ================================================================
+        $('#id_procedimiento').select2({
+            placeholder: 'Busque el procedimiento a realizar',
+            minimumInputLength: 3, // Comienza a buscar después de 3 caracteres
+            language: {
+                inputTooShort: function(args) {
+                    var remainingChars = args.minimum - args.input.length;
+                    return 'Por favor, ingrese ' + remainingChars + ' o más caracteres para buscar.';
+                },
+                noResults: function() {
+                    return 'No se encontraron resultados.';
+                },
+                searching: function() {
+                    return 'Buscando...';
+                }
+            },
+            // ¡Esta es la configuración AJAX que llama a tu controlador!
+            ajax: {
+             url: '{{ route('api.procedimientos.buscar') }}',
+                dataType: 'json',
+                delay: 250, // Espera 250ms después de que el usuario deja de escribir
+                data: function(params) {
+                    // Parámetros que se envían al backend
+                    return {
+                        term: params.term, // El texto que el usuario ha escrito
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    // La respuesta del servidor (la que viste en la imagen) es 'data'.
+                    // Select2 espera que el array de resultados esté en una clave llamada 'results'.
+                    // Tu servidor devuelve la clave 'procedimientos'.
+                    // Aquí hacemos el mapeo.
+                    
+                    // console.log(data); // Puedes descomentar esto para ver la respuesta en la consola del navegador
+                    
+                    return {
+                        results: data.procedimientos, // Mapea tu array 'procedimientos' a 'results'
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            }
+        });
+        
+        // ================================================================
+        // 3. Lógica para mostrar el nombre de los archivos subidos
+        // ================================================================
         document.querySelectorAll('.custom-file-label input[type="file"]').forEach(inputElement => {
-            // A cada input, le añadimos un "escuchador" para cuando se selecciona un archivo (el evento 'change')
             inputElement.addEventListener('change', function(event) {
-                // Obtenemos el ID del input actual (ej. 'historia_clinica')
                 const inputId = this.id;
-                // Construimos el ID del span donde mostraremos el nombre (ej. 'historia_clinica-file-name')
                 const fileNameDisplay = document.getElementById(`${inputId}-file-name`);
 
-                // Verificamos si se seleccionaron archivos
                 if (this.files.length > 0) {
                     if (this.multiple) {
-                        // Si el input permite múltiples archivos, mostramos todos los nombres
                         fileNameDisplay.textContent = Array.from(this.files).map(file => file.name).join(', ');
                     } else {
-                        // Si es un solo archivo, mostramos solo el nombre del primero
                         fileNameDisplay.textContent = this.files[0].name;
                     }
                 } else {
-                    // Si el usuario canceló la selección, volvemos al mensaje por defecto
                     fileNameDisplay.textContent = 'Ningún archivo seleccionado';
                 }
             });
         });
-    });
+    }); // Cierre del ÚNICO listener DOMContentLoaded
 </script>
 </body>
 </html>

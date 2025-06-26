@@ -44,6 +44,11 @@ class Paciente extends Model
     {
         return $this->belongsTo(EPS::class, 'fk_eps', 'id_eps');
     }
+    public function procedimiento()
+{
+    return $this->belongsTo(Procedimiento::class, 'fk_procedimiento', 'id_procedimiento');
+}
+
 
     // Relación con Procedimiento
   

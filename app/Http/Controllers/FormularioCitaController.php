@@ -22,6 +22,7 @@ public function mostrarFormulario()
     
 
     return view('solicitar-cita.formulario', compact('ciudades', 'eps'));
+    
 }
 
 
@@ -58,7 +59,7 @@ public function guardar(Request $request)
     $solicitud->numero_identificacion = Crypt::encryptString($request->numero_identificacion);
     $solicitud->correo           = Crypt::encryptString($request->correo);
     $solicitud->fk_ciudad        = $request->id_ciudad;
-    $solicitud->procedimiento    = Crypt::encryptString($request->procedimiento);
+    $solicitud->fk_procedimiento    = $request->id_procedimiento;
     $solicitud->fk_eps           = $request->id_eps;
     $solicitud->celular          = Crypt::encryptString($request->celular);
     $solicitud->observacion      = Crypt::encryptString($request->observacion);
@@ -77,6 +78,7 @@ public function guardar(Request $request)
         //Log::info('Correo del paciente para envío de confirmación de solicitud desde controlador: ' . ($recipientEmail ?: 'NULL o Vacío'));
  if ($solicitud && $solicitud->id_paciente) { // Verificamos que $paciente no sea null y tenga ID
             $recipientEmail = Crypt::decryptString($solicitud->correo);
+            $solicitud = Paciente::with('procedimiento')->find($solicitud->id_paciente);
 
             if ($recipientEmail && filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
                 try {
@@ -96,7 +98,26 @@ public function guardar(Request $request)
 return redirect()->back()->with('success', '¡Tu solicitud fue enviada correctamente!');
 
 }
+ public function buscar(Request $request)
+    {
+        // Obtiene el término de búsqueda del parámetro 'term' enviado por Select2
+        $searchTerm = $request->input('term');
 
+        // Realiza la consulta a la base de datos.
+        // Busca en las columnas 'nombre' o 'codigo' usando un LIKE
+        $procedimientos = Procedimiento::query()
+            ->where('nombre', 'like', '%' . $searchTerm . '%')
+           // ->orWhere('codigo', 'like', '%' . $searchTerm . '%') // Asume que tienes una columna 'codigo'
+            ->select('id_procedimiento as id', 'nombre as text') // **¡CRUCIAL! Mapea tus columnas a 'id' y 'text'**
+            ->limit(20) // Limita el número de resultados para un mejor rendimiento
+            ->get();
+
+        // Devuelve los resultados en el formato JSON que Select2 espera
+        return response()->json([
+            'procedimientos' => $procedimientos, // <-- La clave debe ser 'procedimientos'
+            'total_count' => count($procedimientos) // Opcional
+        ]);
+    }
     
 
 }

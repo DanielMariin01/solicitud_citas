@@ -45,7 +45,7 @@ class SolicitudConfirmacionMail extends Mailable
                 'pacienteIdentificacion' => Crypt::decryptString($this->paciente->numero_identificacion),
                 'pacienteCelular' => Crypt::decryptString($this->paciente->celular),
                 'pacienteCorreo' => Crypt::decryptString($this->paciente->correo),
-                'pacienteProcedimiento' => Crypt::decryptString($this->paciente->procedimiento),
+                'pacienteProcedimiento' => $this->paciente->procedimiento->nombre ?? 'Sin asignar',
                 'pacienteObservacion' => Crypt::decryptString($this->paciente->observacion),
                 'estado' => $this->paciente->estado, // Estado no está encriptado, según tu tabla
                 'idPaciente' => $this->paciente->id_paciente, // Usa el ID real del paciente
