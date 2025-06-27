@@ -2,7 +2,9 @@
 
 namespace App\Filament\Agendar\Resources\SolicitudAgendamientoResource\Pages;
 
+use App\Filament\AdminMedico\Resources\SolicitudAdmisionResource;
 use App\Filament\Agendar\Resources\SolicitudAgendamientoResource;
+use App\Filament\Resources\SolicitudAgendamientoResource as ResourcesSolicitudAgendamientoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use App\Mail\SolicitudEstadoActualizadoMail; // Asegúrate de importar tu Mailable
@@ -76,4 +78,10 @@ class EditSolicitudAgendamiento extends EditRecord
 
     return $data;
 }
+
+  protected function getRedirectUrl(): string
+    {
+        // Redirige al index (listado) de PacienteResource
+        return ResourcesSolicitudAgendamientoResource::getUrl('index');
+    }
 }

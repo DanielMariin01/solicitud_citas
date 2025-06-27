@@ -2,7 +2,9 @@
 
 namespace App\Filament\AdminMedico\Resources\SolicitudMedicoResource\Pages;
 
+use App\Filament\AdminMedico\Resources\SolicitudAdmisionResource;
 use App\Filament\AdminMedico\Resources\SolicitudMedicoResource;
+use App\Filament\Resources\SolicitudMedicoResource as ResourcesSolicitudMedicoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Mail;
@@ -75,4 +77,12 @@ class EditSolicitudMedico extends EditRecord
 
     return $data;
 }
+
+  protected function getRedirectUrl(): string
+    {
+        // Redirige al index (listado) de PacienteResource
+        return ResourcesSolicitudMedicoResource::getUrl('index');
+    }
+
+
 }

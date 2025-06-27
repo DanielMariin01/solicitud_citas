@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\SolicitudMedicoResource\Pages;
 
+use App\Filament\AdminMedico\Resources\SolicitudAdmisionResource;
+use App\Filament\AdminMedico\Resources\SolicitudMedicoResource as ResourcesSolicitudMedicoResource;
 use App\Filament\Resources\SolicitudMedicoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -77,5 +79,9 @@ protected function mutateFormDataBeforeSave(array $data): array
 
     return $data;
 }
-
+   protected function getRedirectUrl(): string
+    {
+        // Redirige al index (listado) de PacienteResource
+        return ResourcesSolicitudMedicoResource::getUrl('index');
+    }
 }

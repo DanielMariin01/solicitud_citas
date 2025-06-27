@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\SolicitudAgendamientoResource\Pages;
 
+use App\Filament\AdminMedico\Resources\SolicitudAdmisionResource;
+use App\Filament\Agendar\Resources\SolicitudAgendamientoResource as ResourcesSolicitudAgendamientoResource;
 use App\Filament\Resources\SolicitudAgendamientoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -75,5 +77,9 @@ protected function mutateFormDataBeforeSave(array $data): array
 
     return $data;
 }
-    
+      protected function getRedirectUrl(): string
+    {
+        // Redirige al index (listado) de PacienteResource
+        return ResourcesSolicitudAgendamientoResource::getUrl('index');
+    }
 }
