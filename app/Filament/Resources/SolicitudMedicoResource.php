@@ -21,11 +21,11 @@ use Filament\Tables\Columns\BadgeColumn;
 
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Paciente;
-
+use App\Models\Solicitud_Admision;
 
 class SolicitudMedicoResource extends Resource
 {
-    protected static ?string $model = Solicitud_Medico::class;
+    protected static ?string $model = Solicitud_Admision::class;
 
       protected static ?string $navigationIcon = 'heroicon-o-user-circle';
       protected static ?string $navigationGroup = 'Solicitudes';
@@ -259,7 +259,7 @@ class SolicitudMedicoResource extends Resource
         return [
             'index' => Pages\ListSolicitudMedicos::route('/'),
             'create' => Pages\CreateSolicitudMedico::route('/create'),
-            //'edit' => Pages\EditSolicitudMedico::route('/{record}/edit'),
+            'edit' => Pages\EditSolicitudMedico::route('/{record}/edit'),
         ];
     }
 
@@ -267,6 +267,6 @@ class SolicitudMedicoResource extends Resource
     {
         // Esto filtrará la tabla para que solo muestre registros donde 'estado' sea 'aprobada'.
         // Los usuarios no podrán cambiar este filtro desde la UI.
-        return parent::getEloquentQuery()->where('estado', 'enviada_a_medico');
+        return parent::getEloquentQuery()->where('estado', 'pertinencia_medica');
     }
 }

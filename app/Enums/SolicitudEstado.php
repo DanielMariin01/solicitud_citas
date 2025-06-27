@@ -5,7 +5,7 @@ namespace App\Enums;
 enum SolicitudEstado: string
 {
     case PENDIENTE = 'pendiente';
-    case ENVIADA_A_MEDICO = 'enviada_a_medico';
+    case PERTINENCIA_MEDICA = 'pertinencia_medica';
     case AGENDAR = 'agendar';
 
     case CANCELADA = 'cancelada';
@@ -21,7 +21,7 @@ enum SolicitudEstado: string
     {
         return match ($this) {
             self::PENDIENTE => 'Pendiente',
-            self::ENVIADA_A_MEDICO => 'Enviada a Médico',
+            self::PERTINENCIA_MEDICA => 'pertinencia_medica',
             self::AGENDAR => 'agendar',
             self::CANCELADA => 'Cancelada',
             self::FINALIZADA => 'Finalizada',
@@ -38,7 +38,7 @@ enum SolicitudEstado: string
     {
         return match ($this) {
             self::PENDIENTE => 'warning', // Amarillo
-            self::ENVIADA_A_MEDICO => 'info', // Azul claro
+            self::PERTINENCIA_MEDICA => 'info', // Azul claro
             self::AGENDAR => 'success', // Verde
             self::CANCELADA => 'danger', // Rojo
             self::FINALIZADA => 'gray', // Gris

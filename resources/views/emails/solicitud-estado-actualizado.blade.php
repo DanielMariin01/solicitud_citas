@@ -144,7 +144,8 @@
                             <ul class="detail-list">
                     
         
-                                <li><strong>Estado Actual:</strong> **{{ $estado ?? 'Desconocido' }}**</li>
+                                <li><strong>Estado Actual:</strong> {{ $estado ?? 'Desconocido' }}</li>
+                                <li><strong>Observación:</strong> {{ $comentario ?? 'Desconocido' }}</li>
                                 
                   
                             </ul>

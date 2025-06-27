@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Enums\SolicitudEstado;
 use App\Enums\SolicitudEstadoAgendamiento;
+use App\Models\Solicitud_Admision;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\BadgeColumn;
 
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class SolicitudAgendamientoResource extends Resource
 {
-    protected static ?string $model = Solicitud_agendamiento::class;
+    protected static ?string $model = Solicitud_Admision::class;
 protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
       protected static ?string $navigationGroup = 'Agendamiento';
     protected static ?int $navigationSort = 1;
@@ -233,7 +234,7 @@ protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
         return [
             'index' => Pages\ListSolicitudAgendamientos::route('/'),
             'create' => Pages\CreateSolicitudAgendamiento::route('/create'),
-            //'edit' => Pages\EditSolicitudAgendamiento::route('/{record}/edit'),
+            'edit' => Pages\EditSolicitudAgendamiento::route('/{record}/edit'),
         ];
     }
 

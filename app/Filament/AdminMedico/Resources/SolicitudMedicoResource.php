@@ -257,6 +257,6 @@ class SolicitudMedicoResource extends Resource
     {
         // Esto filtrará la tabla para que solo muestre registros donde 'estado' sea 'aprobada'.
         // Los usuarios no podrán cambiar este filtro desde la UI.
-        return parent::getEloquentQuery()->where('estado', 'enviada_a_medico');
+        return parent::getEloquentQuery()->where('estado', 'pertinencia_medica');
     }
 }

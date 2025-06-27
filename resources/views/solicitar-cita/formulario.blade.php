@@ -446,16 +446,23 @@ select {
         // 1. Inicialización de Select2 para selectores sin búsqueda AJAX
         // ================================================================
         // Asegúrate de que los IDs coincidan con tu HTML
-        $('#id_ciudad').select2();
-        $('#id_eps').select2();
-        $('#tipo_identificacion').select2(); // Si lo tienes
+$('#id_ciudad').select2({
+    width: '100%'
+});
+     $('#id_eps').select2({
+    width: '100%'
+});
+$('#tipo_identificacion').select2({ // Si lo tienes
+    width: '100%'
+});
 
         // ================================================================
         // 2. Inicialización de Select2 con búsqueda remota (AJAX) para PROCEDIMIENTOS
         // ================================================================
         $('#id_procedimiento').select2({
             placeholder: 'Busque el procedimiento a realizar',
-            minimumInputLength: 3, // Comienza a buscar después de 3 caracteres
+            minimumInputLength: 3,
+             width: '100%', // Comienza a buscar después de 3 caracteres
             language: {
                 inputTooShort: function(args) {
                     var remainingChars = args.minimum - args.input.length;

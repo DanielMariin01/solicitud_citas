@@ -51,7 +51,7 @@ class SolicitudAdmisionResource extends Resource
                 ->required()
                 ->options([
                 
-                    'enviada_a_medico' => 'Enviada_a_Medico',
+                    'pertinencia_medica' => 'Pertinencia Medica',
                     'agendar' => 'Agendar', // <-- Asegúrate que esta clave sea 'agendar' (string)
                     'cancelada' => 'Cancelada',
                
@@ -244,7 +244,7 @@ class SolicitudAdmisionResource extends Resource
                         \App\Enums\SolicitudEstado::PENDIENTE->value => 'Pendiente',
                         \App\Enums\SolicitudEstado::AGENDAR->value => 'agendar',
                         \App\Enums\SolicitudEstado::CANCELADA->value => 'Cancelada',
-                        \App\Enums\SolicitudEstado::ENVIADA_A_MEDICO->value => 'Enviada a Médico',
+                        \App\Enums\SolicitudEstado::PERTINENCIA_MEDICA->value => 'Enviada a pertinencia medica',
                         \App\Enums\SolicitudEstado::FINALIZADA->value => 'Finalizada',
                     ])
                     ->searchable(),
