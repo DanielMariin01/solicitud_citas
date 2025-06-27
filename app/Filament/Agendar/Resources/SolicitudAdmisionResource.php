@@ -226,7 +226,7 @@ class SolicitudAdmisionResource extends Resource
                         \App\Enums\SolicitudEstado::PENDIENTE->value => 'Pendiente',
                         \App\Enums\SolicitudEstado::AGENDAR->value => 'agendar',
                         \App\Enums\SolicitudEstado::CANCELADA->value => 'Cancelada',
-                        \App\Enums\SolicitudEstado::ENVIADA_A_MEDICO->value => 'Enviada a Médico',
+                        \App\Enums\SolicitudEstado::PERTINENCIA_MEDICA->value => 'Pertinencia Medica',
                         \App\Enums\SolicitudEstado::FINALIZADA->value => 'Finalizada',
                     ])
                     ->searchable(),

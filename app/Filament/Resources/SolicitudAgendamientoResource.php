@@ -52,7 +52,21 @@ protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
                     ->label('Estado de Solicitud')
                     ->options(SolicitudEstadoAgendamiento::class)
                     ->required()
-                    ->native(false)
+                    ->native(false),
+                Forms\Components\TextInput::make('comentario')
+                    ->label('Observación')
+                    ->maxLength(1000)
+                    ->required()
+                    // Elimina ->dehydrateStateUsing(fn (string $state) => null)
+                    // Elimina ->default(null)
+                    // Elimina ->fillFromModel(false)
+
+                    // Esta es la forma correcta de hacer que el campo esté vacío al cargar
+                    ->afterStateHydrated(function (Forms\Components\TextInput $component, ?string $state) {
+                        // Siempre establece el estado del componente a null (vacío)
+                        // al hidratarse, ignorando el valor que venga del modelo.
+                        $component->state(null);
+                    })
             ]);
     }
 

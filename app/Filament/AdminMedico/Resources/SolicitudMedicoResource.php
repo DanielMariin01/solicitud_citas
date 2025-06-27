@@ -4,6 +4,7 @@ namespace App\Filament\AdminMedico\Resources;
 
 use App\Filament\AdminMedico\Resources\SolicitudMedicoResource\Pages;
 use App\Filament\AdminMedico\Resources\SolicitudMedicoResource\RelationManagers;
+use App\Models\Solicitud_Admision;
 use App\Models\SolicitudMedico;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class SolicitudMedicoResource extends Resource
 {
-    protected static ?string $model = Solicitud_Medico::class;
+    protected static ?string $model = Solicitud_Admision::class;
 
    
       protected static ?string $navigationIcon = 'heroicon-o-user-circle';
@@ -250,7 +251,7 @@ class SolicitudMedicoResource extends Resource
         return [
             'index' => Pages\ListSolicitudMedicos::route('/'),
             'create' => Pages\CreateSolicitudMedico::route('/create'),
-            //'edit' => Pages\EditSolicitudMedico::route('/{record}/edit'),
+            'edit' => Pages\EditSolicitudMedico::route('/{record}/edit'),
         ];
     }
               public static function getEloquentQuery(): Builder
